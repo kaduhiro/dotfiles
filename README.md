@@ -2,6 +2,11 @@
 
 Same environment in all environments.
 
+## Operating Systems
+
+* Linux
+* macOS
+
 ## Features
 
 * zsh
