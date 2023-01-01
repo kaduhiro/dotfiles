@@ -4,6 +4,7 @@ Same environment in all environments.
 
 ## Features
 
+* zsh
 * Vim
 * tmux
 * git
