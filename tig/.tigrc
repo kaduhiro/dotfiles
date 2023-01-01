@@ -1,0 +1,106 @@
+# ########## general ##########
+# view commit id in main view
+set main-view = id date author:email-user commit-title:graph=yes,refs=yes
+
+# ########## git fetch ##########
+bind generic F      ?git fetch %(remote)
+bind main    F      ?git fetch %(remote)
+
+bind generic <Esc>F :toggle file-name
+bind main    <Esc>F :toggle commit-title-refs
+
+# ########## git pull ##########
+bind generic U      ?git pull %(remote)
+
+# ########## git push ##########
+bind generic P      ?git push -u %(remote) %(repo:head)
+
+# ########## git commit ##########
+bind generic C      !git commit
+bind refs    C      !git commit
+bind main    C      !git commit
+
+# amend
+bind generic +      !git commit --amend --allow-empty
+
+# ########## git checkout ##########
+bind main    =      ?git checkout %(branch)
+bind refs    =      ?git checkout %(branch)
+bind main    <Esc>= ?git checkout %(commit)
+
+# previous branch
+bind generic -      ?git checkout -
+
+# ########## git reset ##########
+# soft
+bind generic ^      ?git reset --soft HEAD^
+
+# hard
+bind main    H      ?git reset --hard %(commit)
+bind diff    H      ?git reset --hard %(commit)
+bind refs    H      ?git reset --hard %(branch)
+
+bind status  H      ?git reset --hard HEAD
+
+# ########## git merge ##########
+bind main    M      ?git merge %(branch)
+bind diff    M      ?git merge %(branch)
+bind refs    M      ?git merge %(branch)
+bind main    <Esc>M ?git merge %(commit)
+bind diff    <Esc>M ?git merge %(commit)
+
+# ########## git rebase ##########
+bind main    R ?git rebase %(commit)
+bind main    <Esc>R ?git rebase %(branch)
+
+# interactive
+bind main    <Esc>I ?git rebase -i %(bransh)
+bind main    I      ?git rebase -i %(commit)
+
+# ########## git stash ##########
+# save
+bind generic S      ?git stash save "%(prompt Enter stash comment: )"
+
+# apply
+bind diff    Y      ?git stash apply %(stash)
+bind stash   Y      ?git stash apply %(stash)
+
+# pop
+bind diff    <Esc>Y ?git stash pop %(stash)
+bind stash   <Esc>Y ?git stash pop %(stash)
+
+# drop
+bind stash   D      ?git stash drop %(stash)
+
+# ########## git tag ##########
+bind main    T ?git tag "%(prompt Enter tag name: )" %(commit)
+bind refs    T ?git tag "%(prompt Enter tag name: )" %(branch)
+
+# ########## git branch ##########
+bind main    B      ?git checkout -b "%(prompt Enter branch name: )" %(branch)
+bind refs    B      ?git checkout -b "%(prompt Enter branch name: )" %(branch)
+bind main    <Esc>b ?git checkout -b "%(prompt Enter branch name: )" %(commit)
+
+# delete
+bind refs    D      ?git branch -d %(branch)
+
+# delete merged branch
+bind refs    x      ?sh -c "git branch --merged | grep -vE '^\\*|main$|develop$' | xargs -I % git branch -d %"
+
+# ########## git clean ##########
+bind main    x      ?git clean -d -f
+bind status  x      ?git clean -d -f
+
+bind status  D      ?git clean -d -f -- %(file)
+
+# ########## git diff ##########
+bind main    .      !sh -c "git diff %(commit) | tig"
+bind diff    .      !sh -c "git diff %(commit) | tig"
+bind refs    .      !sh -c "git diff %(branch) | tig"
+
+bind main    <Esc>. ?sh -c "git diff %(commit)..%(prompt Enter commit ID: ) | tig"
+bind diff    <Esc>. ?sh -c "git diff %(commit)..%(prompt Enter commit ID: ) | tig"
+bind refs    <Esc>. ?sh -c "git diff %(branch)..%(prompt Enter branch name: ) | tig"
+
+# ########## git tree ##########
+bind tree    D      ?git rm %(file)

@@ -7,6 +7,7 @@ Same environment in all environments.
 * Vim
 * tmux
 * git
+* tig
 
 ## Author
 
