@@ -5,6 +5,7 @@ Same environment in all environments.
 ## Features
 
 * Vim
+* tmux
 
 ## Author
 
