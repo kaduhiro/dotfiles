@@ -1,6 +1,6 @@
 # ########## general ##########
 # view commit id in main view
-set main-view = id date author:email-user commit-title:graph=yes,refs=yes
+set main-view = id date author commit-title:graph=yes,refs=yes
 
 # ########## git fetch ##########
 bind generic F      ?git fetch %(remote)
