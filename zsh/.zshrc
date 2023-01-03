@@ -6,6 +6,8 @@ PROMPT="%{${fg[green]}%}[%n@%m %~]$%{${reset_color}%} "
 
 autoload -Uz colors; colors
 
+export PATH="$PATH:$HOME/.bin:$HOME/.local/bin"
+
 export EDITOR=vim
 bindkey -e
 
@@ -15,8 +17,6 @@ HISTSIZE=10000
 SAVEHIST=1000000
 setopt inc_append_history
 setopt share_history
-
-export PATH="$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin"
 
 autoload -Uz select-word-style; select-word-style default
 zstyle ':zle:*' word-chars " /=;@:{},|"
@@ -112,7 +112,7 @@ alias .='source ~/.zshrc'
 alias zshrc='vi ~/.zshrc'
 alias .z='zshrc'
 
-alias .install='~/.dotfiles/etc/install.sh'
+alias .install='~/.dotapps/etc/install.sh'
 
 # #################### profile ####################
 if [ -f ~/.profile ]; then
