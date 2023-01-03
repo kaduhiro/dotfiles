@@ -30,8 +30,8 @@ zstyle ':vcs_info:*' formats '%F{green}(%s)-[%b]%f'
 zstyle ':vcs_info:*' actionformats '%F{red}(%s)-[%b|%a]%f'
 
 _vcs_init() {
-  LANG=en_US.UTF-8 vcs_info
-  RPROMPT="${vcs_info_msg_0_}"
+	LANG=en_US.UTF-8 vcs_info
+	RPROMPT="${vcs_info_msg_0_}"
 }
 add-zsh-hook precmd _vcs_init
 
@@ -63,10 +63,10 @@ zplug "zsh-users/zsh-completions"
 zplug "chrissicool/zsh-256color"
 
 if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
+	printf "Install? [y/N]: "
+	if read -q; then
+		echo; zplug install
+	fi
 fi
 
 zplug load
@@ -86,15 +86,15 @@ bindkey '^R' history-incremental-pattern-search-backward
 alias la='ls -a'
 alias ll='ls -l'
 case $OSTYPE in
-  # macos
-  darwin*)
-    export CLICOLOR=1
-    alias ls='ls -G -F'
-    ;;
-  # linux
-  linux*)
-    alias ls='ls -F --color=auto'
-    ;;
+	# macos
+	darwin*)
+		export CLICOLOR=1
+		alias ls='ls -G -F'
+		;;
+	# linux
+	linux*)
+		alias ls='ls -F --color=auto'
+		;;
 esac
 
 alias sudo='sudo '
@@ -116,13 +116,13 @@ alias .install='~/.dotfiles/etc/install.sh'
 
 # #################### profile ####################
 if [ -f ~/.profile ]; then
-  source ~/.profile
+	source ~/.profile
 fi
 
 if [ -d ~/.profile.d ]; then
-  for profile in $(find ~/.profile.d -follow -name '*.sh'); do
-    source $profile
-  done
+	for profile in $(find ~/.profile.d -follow -name '*.sh'); do
+		source $profile
+	done
 fi
 
 # vim:set ft=zsh:
