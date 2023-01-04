@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+helloworld() {
+	local SERVICE=service
+
+	printf '? repository name (required) ' && read repository
+	if [ -z "$repository" ]; then
+		return 1
+	fi
+
+	git clone https://github.com/kaduhiro/helloworld "$repository"
+
+	printf "? service name ($SERVICE) " && read service
+	if [ -n "$service" ]; then
+		echo "# $service" > "$repository/README.md"
+
+		cat "$repository/Makefile" | sed -E "s/(SERVICE := )$SERVICE/\1$service/g" | tee "$repository/Makefile" > /dev/null
+		cat "$repository/docker-compose.yml" | sed -E "s/([[:space:]])$SERVICE/\1$service/g" | tee "$repository/docker-compose.yml" > /dev/null
+	fi
+}
+
+helloworld $@
