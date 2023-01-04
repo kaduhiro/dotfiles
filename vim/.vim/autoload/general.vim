@@ -17,11 +17,11 @@ set title
 set number
 set tabstop=2
 
-" set list
-" set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:･
+set list
+set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:･
 
-hi NonText    ctermfg=232 guifg=#080808 "rgb=8,8,8
-hi SpecialKey ctermfg=232 guifg=#080808 "rgb=8,8,8
+hi NonText    ctermfg=236 guifg=#303030 "rgb=48,48,48
+hi SpecialKey ctermfg=236 guifg=#303030 "rgb=48,48,48
 
 set wildmenu
 set wildmode=full
