@@ -1,0 +1,15 @@
+sh.\(\S\+\)
+	#!/bin/sh
+	set -eu
+	
+	{{$1}}() {
+	    {{_cursor_}}
+	}
+	
+	{{$1}} $@
+
+if.yn
+	printf '? {{_cursor_}} [y/N] ' && read yn
+	if [ "$yn" != 'y' ]; then
+	    return 1
+	fi
