@@ -5,6 +5,7 @@
 scripts=(
 general
 finder
+trackpad
 )
 
 dir=$(dirname "$0")
