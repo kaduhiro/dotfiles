@@ -16,10 +16,6 @@ bind generic U      ?git pull %(remote)
 bind generic P      ?git push -u %(remote) %(repo:head)
 
 # ########## git commit ##########
-bind generic C      !git commit
-bind refs    C      !git commit
-bind main    C      !git commit
-
 # amend
 bind generic +      !git commit --amend --allow-empty
 
