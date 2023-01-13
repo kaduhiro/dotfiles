@@ -9,7 +9,8 @@ helloworld() {
 		return 1
 	fi
 
-	git clone https://github.com/kaduhiro/helloworld "$repository"
+	git clone --depth=1 https://github.com/kaduhiro/helloworld "$repository"
+	rm -rf "$repository/.git"
 
 	printf "? service name ($SERVICE) " && read service
 	if [ -n "$service" ]; then
