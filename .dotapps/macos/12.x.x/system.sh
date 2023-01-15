@@ -5,6 +5,7 @@
 scripts=(
 general
 finder
+keyboard
 trackpad
 )
 
