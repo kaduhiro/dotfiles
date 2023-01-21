@@ -1,0 +1,134 @@
+#!/bin/sh
+set -eu
+
+_snipgen() {
+	local PROFILE=~/.profile
+	local TMP_PATH=/tmp/snipgen
+
+	local DIFFERS='sh:shellscript make:makefile tf:terraform'
+
+	if [ -z "$VSCODE_SNIPPET_DIR" ]; then
+		for snippet_dir in \
+			"/Users/$USER/AppData/Roaming/Code/User/snippets" \
+			"/mnt/c/Users/$USER/AppData/Roaming/Code/User/snippets" \
+			"/Users/$USER/Library/Application Support/Code/User/snippets"; do
+			if [ -d "$snippet_dir" ]; then
+				VSCODE_SNIPPET_DIR="$snippet_dir"
+				break
+			fi
+		done
+	fi
+
+	if [ ! -d "$VSCODE_SNIPPET_DIR" ]; then
+		printf "? vscode snippet directory ($VSCODE_SNIPPET_DIR) " && read VSCODE_SNIPPET_DIR
+		if [ ! -d "$VSCODE_SNIPPET_DIR" ]; then
+			echo "! no such directory, $VSCODE_SNIPPET_DIR"
+			false
+		fi
+	fi
+
+	local prefix='export VSCODE_SNIPPET_DIR='
+	local export="$prefix'$VSCODE_SNIPPET_DIR'"
+
+	cat $PROFILE \
+	| sed -e "/^$prefix/d" \
+	| awk -v "end=$export" '{ print; } END { print end; }' \
+	| tee $PROFILE > /dev/null
+
+	eval $export
+
+	[ -d "$TMP_PATH" ] && rm -rf "$TMP_PATH"
+	mkdir "$TMP_PATH"
+
+	for file in $(find ~/.vim/template -name pattern.stpl); do
+		local dir=$(basename $(dirname $file))
+	
+		for differ in $DIFFERS; do
+			dir=$(echo $dir | sed -e "s/^$(echo $differ | cut -d':' -f1)$/$(echo $differ | cut -d':' -f2)/")
+		done
+
+		awk -v "eol=$(cat $file | wc -l)" '
+			/^\t/ {
+				l = $0;
+	
+				gsub(/^\t/, "", l);
+				gsub(/\\/, "\\\\", l);
+				gsub(/\t/, "\\t", l);
+				gsub(/"/, "\\\"", l);
+				gsub(/\$/, "\\\\$", l);
+				gsub("{{_cursor_}}", "$0", l);
+	
+				for (i = 1; i <= argc; i++) {
+					gsub("{{\\\\\\\\\\$" i "}}", "$" i, l);
+				}
+	
+				if (body) {
+					body = sprintf("%s,\n", body);
+				}
+	
+				body = sprintf("%s      \"%s\"", body, l);
+			}
+	
+			$0 ~ /^[^\t]/ || NR == eol {
+				for (argc = 0; match($0, /\\\(.+\\\)/); argc++) {
+					sub(/\\\([^\(\)]+\\\)/, "$" (argc + 1));
+				}
+	
+				gsub(/\\/, "\\\\");
+	
+				if (prefix) {
+					if (json) {
+						json = sprintf("%s,\n", json);
+					}
+					json = sprintf("%s  \"%s\": {\n    \"prefix\": \"$%s\",\n    \"body\": [\n%s\n    ]\n  }", json, prefix, prefix, body);
+				}
+	
+				prefix = $0;
+	
+				body = "";
+			}
+	
+			END {
+				printf("{\n%s\n}", json);
+			}
+		' "$file" > "$TMP_PATH/$dir.json"
+	done
+
+	local is_updated=
+
+	printf "%-2s %-10s %-30s %-50s\n" "?" "Add:Del" "File Type" "VSCode Snippet Path"
+	for file in $(find $TMP_PATH -name '*.json'); do
+		local status=
+		local add_del=
+		local json_file=$(basename $file)
+		local vscode_json="$VSCODE_SNIPPET_DIR/$json_file"
+		if [ -f "$vscode_json" ]; then
+			add_del=$(diff -u "$vscode_json" "$file" | awk 'BEGIN{a=b=0}/^\+/{a++}/^\-/{d++}END{if(a>0||b>0)printf "%d:%d",a,d}')
+			if [ -n "$add_del" ]; then
+				status=M
+			fi
+		else
+			status=A
+		fi
+		[ -n "$status" ] && is_updated=1
+
+		printf "%-2s %-10s %-30s %-50s\n" "$status" "$add_del" "${json_file%.*}" "$vscode_json"
+	done
+
+	if [ -z "$is_updated" ]; then
+		echo "! no updates"
+		return 0
+	fi
+
+	printf "? overwrite [y/N] " && read yn
+	if [ "$yn" != 'y' ]; then
+		false
+	fi
+
+	for file in $(find $TMP_PATH -name '*.json'); do
+		echo "! updated, $(basename $file)"
+		cp "$file" "$VSCODE_SNIPPET_DIR/$(basename $file)"
+	done
+}
+
+_snipgen
