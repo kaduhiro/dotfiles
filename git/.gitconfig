@@ -1,6 +1,6 @@
 [user]
-	# name  = # git config --global user.name "name"
-	# email = # git config --global user.email "email"
+	# name  = kaduhiro # git config --global user.name "name"
+	# email = github@kaduhiro.com # git config --global user.email "email"
 
 [color]
 	ui = auto
