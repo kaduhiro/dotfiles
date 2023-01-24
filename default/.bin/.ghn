@@ -1,0 +1,54 @@
+#!/bin/sh
+set -eu
+
+_ghn() {
+	local larges="$(find . -mindepth 1 -type f -size +50M)"
+	if [ -n "$larges" ]; then
+		cat <<- EOL
+		! warning: some files over the capacity limit ( >= 50mb )
+
+		files:
+		$(printf "$larges" | awk '{ printf("  %s\n", $0); }')
+
+		! use .gitignore or .git/info/exlude for commit
+		EOL
+	fi
+
+	local repo=${1:-$(basename $(pwd))}
+
+	printf "? create repository on github.com? ($repo) [y/N] " && read yn
+	if [ "$yn" = 'y' ]; then
+		local origin=$(gh auth status 2>&1 \
+			| awk '
+				/ as / {
+					gsub(/^.* as /, "");
+					gsub(/ \(.*\)$/, "");
+					username = $0;
+				}
+				/ use ssh / {
+					protocol = "git@github.com:";
+				}
+				/ use https / {
+					protocol = "https://github.com/";
+				}
+				END {
+					printf("%s%s", protocol, username);
+				}
+			'
+		)
+
+		git init
+		git add .
+		git commit -m 'chore: initialization'
+		git br -m main
+		git remote add origin $origin/$repo.git
+
+		printf "? push ($repo) [y/N] " && read yn
+		if [ "$yn" = 'y' ]; then
+			gh repo create --private $repo
+			git push -u origin main
+		fi
+  fi
+}
+
+_ghn $@
