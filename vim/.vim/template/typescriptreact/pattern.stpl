@@ -1,0 +1,43 @@
+log.\(\S\+\).\(\S\+\)
+	console.log('{{$1}}', '{{$2}}', '$TM_FILENAME_BASE');
+
+type.\(\S\+\)
+	export type {{$1}} = {
+	  {{_cursor_}}
+	};
+
+component.\(\S\+\)
+	import { ReactNode, useState } from 'react';
+	
+	export type Props = {
+		children: ReactNode;
+	};
+	
+	const {{$1}} = ({ children }: Props) => {
+	  const [state, setState] = useState<string>('');
+	
+	  return (
+	    <>
+	      {children}
+	      {{_cursor_}}
+	    </>
+	  );
+	};
+	
+	export default {{$1}};
+
+component.named.\(\S\+\)
+	export const {{$1}} = () => {
+	  return (
+	    <>
+	      {{_cursor_}}
+	    </>
+	  );
+	};
+
+map.\(\S\+\)
+	{{{$1}}s.map(({{$1}}, _) => {
+	  return (
+	    {{_cursor_}}
+	  );
+	})}
