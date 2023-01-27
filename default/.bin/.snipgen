@@ -96,8 +96,11 @@ _snipgen() {
 
 	local is_updated=
 
-	printf "%-2s %-10s %-30s %-50s\n" "?" "Add:Del" "File Type" "VSCode Snippet Path"
-	for file in $(find $TMP_PATH -name '*.json'); do
+	printf "%-3s  %-2s %-10s %-30s %-50s\n" "Num" "?" "Add:Del" "File Type" "VSCode Snippet Path"
+
+	local files=$(find "$TMP_PATH" -name '*.json')
+	local lines=
+	for file in $files; do
 		local status=
 		local add_del=
 		local json_file=$(basename $file)
@@ -112,21 +115,38 @@ _snipgen() {
 		fi
 		[ -n "$status" ] && is_updated=1
 
-		printf "%-2s %-10s %-30s %-50s\n" "$status" "$add_del" "${json_file%.*}" "$vscode_json"
-	done
+		lines="$lines${lines:+\n}$(printf "  %-2s %-10s %-30s %-50s" "$status" "$add_del" "${json_file%.*}" "$vscode_json")"
+	done 
+
+	printf "$lines" | nl -w 3 -s ''
 
 	if [ -z "$is_updated" ]; then
 		echo "! no updates"
 		return 0
 	fi
 
-	printf "? overwrite [y/N] " && read yn
-	if [ "$yn" != 'y' ]; then
-		false
+	printf "? numbers (ssv or csv, 0 is all) " && read nums
+	if [ -z "$nums" ]; then
+		return 1
 	fi
 
-	for file in $(find $TMP_PATH -name '*.json'); do
-		echo "! updated, $(basename $file)"
+	for num in $(echo $nums | sed 's/,/ /g'); do
+		echo "  - $(basename $(printf "$files" | sed -n ${num}p))"
+	done
+
+	printf "? update [y/N] " && read yn
+	if [ "$yn" != 'y' ]; then
+		return 0
+	fi
+
+	for num in $(echo $nums | sed 's/,/ /g'); do
+		local file=$(printf "$files" | sed -n ${num}p)
+		if [ ! -f "$file" ]; then
+			echo "✘ no such file, $file"
+			continue
+		fi
+
+		echo "✓ updated, $(basename $file)"
 		cp "$file" "$VSCODE_SNIPPET_DIR/$(basename $file)"
 	done
 }
