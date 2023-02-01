@@ -18,7 +18,7 @@ _visnip() {
 	: ${template:=$input}
 
 	if [ -d "$TEMPLATE_PATH/$template" ]; then
-		local files=$(find "$TEMPLATE_PATH/$template" -name '*.stpl' -or -name 'base-*' | awk -F'/' '{print $NF}')
+		local files=$(find "$TEMPLATE_PATH/$template" -name '*.stpl' -or -name 'base-*' -or -name 'file-*' -or -name 'snip-*' | awk -F'/' '{print $NF}')
 
 		echo "${files:-no template}" | nl
 		printf "? file (number, name, and empty is 1) " && read input
