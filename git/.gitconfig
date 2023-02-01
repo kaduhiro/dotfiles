@@ -28,6 +28,7 @@
 	cp = cherry-pick
 	ci = commit
 	cia = commit --amend
+	pushf = push --force-with-lease
 	ss = stash
 	ssmv = "!f(){ [ -n \"$1\" ] && git stash store -m \"${2:-renamed}\" $(git stash drop ${1:-0} | sed 's/^.*(\\(.*\\))$/\\1/'); };f"
 	diffc = diff --cached
