@@ -46,12 +46,14 @@ bind main    <Esc>M ?git merge %(commit)
 bind diff    <Esc>M ?git merge %(commit)
 
 # ########## git rebase ##########
-bind main    R ?git rebase %(commit)
+bind main    >      ?git rebase --continue
+
+bind main    R      ?git rebase %(commit)
 bind main    <Esc>R ?git rebase %(branch)
 
 # interactive
-bind main    <Esc>I ?git rebase -i %(bransh)
 bind main    I      ?git rebase -i %(commit)
+bind main    <Esc>I ?git rebase -i %(bransh)
 
 # ########## git stash ##########
 # save
