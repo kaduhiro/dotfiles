@@ -2,11 +2,6 @@
 alias .tmux.conf='vi ~/.tmux.conf'
 alias .tmux-source='tmux source-file ~/.tmux.conf'
 
-# run when shell starts
-if [ -z $VSCODE_TASKS ] && [ -z $TMUX ] && type tmux > /dev/null; then
-	tmux a || tmux
-fi
-
 # enable ssh-agent in tmux
 function _tmux_ssh_agent() {
 	SSH_AGENT="$HOME/.ssh/agent"
@@ -31,3 +26,8 @@ function _tmux_ssh_agent() {
 }
 
 _tmux_ssh_agent
+
+# run when shell starts
+if [ -z $VSCODE_TASKS ] && [ -z $TMUX ] && type tmux > /dev/null; then
+	tmux a || tmux
+fi
