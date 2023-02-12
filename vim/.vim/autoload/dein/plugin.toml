@@ -56,7 +56,8 @@ hook_add = '''
 let g:sonictemplate_author = 'Anonymous'
 let g:sonictemplate_license = 'MIT'
 let g:sonictemplate_vim_template_dir = expand('~/.vim/template')
-noremap <C-y><C-y> <Esc>:Template 
+nnoremap <C-y><C-y> <Esc>:Template 
+inoremap <C-y><C-y> <Esc>:Template 
 '''
 
 [[plugins]]
