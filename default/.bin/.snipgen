@@ -61,7 +61,47 @@ _snipgen() {
 				for (i = 1; i <= argc; i++) {
 					gsub("{{\\\\\\\\\\$" i "}}", "$" i, l);
 				}
-	
+
+				while (match(l, /{{_input_:[^}]+}}/)) {
+					target = substr(l, RSTART, RLENGTH);
+
+					name = target;
+					sub("{{_input_:", "", name);
+					sub("}}", "", name);
+					split(name, names, ":");
+
+					value = "";
+					if (length(names) == 2) {
+						name = names[1];
+						value = names[2];
+					}
+
+					for (i = 0; i < length(vars); i++) {
+						if (name == vars[i]) {
+							break;
+						}
+					}
+
+					if (i == length(vars)) {
+						vars[length(vars)] = name;
+					}
+
+					if (length(value) > 0) {
+						replacement = "${" (i + 1) ":" value "}"
+					} else {
+						replacement = "$" (i + 1)
+					}
+
+					gsub(target, replacement, l);
+
+					name_capitalize = toupper(substr(name, 1, 1)) substr(name, 2);
+					target_capitalize = target;
+					sub(name, name_capitalize, target_capitalize);
+					replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/capitalize}/}";
+
+					gsub(target_capitalize, replacement, l);
+				}
+
 				if (body) {
 					body = sprintf("%s,\n", body);
 				}
@@ -86,6 +126,8 @@ _snipgen() {
 				prefix = $0;
 	
 				body = "";
+
+				split("", vars);
 			}
 	
 			END {
