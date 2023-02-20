@@ -7,3 +7,4 @@ _git() {
 
 alias .git=_git
 alias .gitconfig='vi ~/.gitconfig'
+alias .gitignore='vi ~/.config/git/ignore'
