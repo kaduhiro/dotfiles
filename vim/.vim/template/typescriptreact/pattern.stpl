@@ -1,21 +1,48 @@
-log.\(\S\+\).\(\S\+\)
-	console.log('{{$1}}', '{{$2}}', '$TM_FILENAME_BASE');
+import.fontawesome
+	import { fa{{_input_:icon}} } from '@fortawesome/free-{{_input_:type:solid}}-svg-icons';
+	import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-type.\(\S\+\)
-	export type {{$1}} = {
+export
+	export * from './{{_input_:file}}';
+
+export.type
+	export type {{_input_:name}} = {
 	  {{_cursor_}}
 	};
 
-component.\(\S\+\)
+useState
+	const [{{_input_:name}}, set{{_input_:Name}}] = useState<{{_input_:type:boolean}}>({{_input_:default:true}});
+
+useRecoilState
+	const [{{_input_:name}}, set{{_input_:Name}}] = useRecoilState({{_input_:name}}State);
+
+useEffect
+	useEffect(() => {
+		{{_cursor_}}
+	}, []);
+
+log
+	console.log(`[$TM_FILENAME:$TM_LINE_NUMBER] {{_input_:var}}`, {{_input_:var}});
+
+map
+	{{{_input_:name}}s.map(({{_input_:name}}, _) => {
+	  return (
+	    {{_cursor_}}
+	  );
+	})}
+
+sleep
+	const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+	await sleep(1000);
+
+component
 	import { ReactNode, useState } from 'react';
 	
 	export type Props = {
 		children: ReactNode;
 	};
 	
-	const {{$1}} = ({ children }: Props) => {
-	  const [state, setState] = useState<string>('');
-	
+	const {{_input_:name}} = ({ children }: Props) => {
 	  return (
 	    <>
 	      {children}
@@ -26,8 +53,8 @@ component.\(\S\+\)
 	
 	export default {{$1}};
 
-component.named.\(\S\+\)
-	export const {{$1}} = () => {
+component.named
+	export const {{_input_:name}} = () => {
 	  return (
 	    <>
 	      {{_cursor_}}
