@@ -21,6 +21,11 @@ useEffect
 		{{_cursor_}}
 	}, []);
 
+useCallback
+	const {{_input_:name}} = useCallback(() => {
+	  {{_cursor_}}
+	}, [{{_input_:deps}}]);
+
 log
 	console.log(`[$TM_FILENAME:$TM_LINE_NUMBER] {{_input_:var}}`, {{_input_:var}});
 
