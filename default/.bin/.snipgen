@@ -101,6 +101,13 @@ _snipgen() {
 					replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/capitalize}/}";
 
 					gsub(target_capitalize, replacement, l);
+
+					name_camel = tolower(substr(name, 1, 1)) substr(name, 2);
+					target_camel = target;
+					sub(name, name_camel, target_camel);
+					replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/camelcase}/}";
+
+					gsub(target_camel, replacement, l);
 				}
 
 				if (body) {
