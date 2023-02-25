@@ -16,6 +16,12 @@ useState
 useRecoilState
 	const [{{_input_:name}}, set{{_input_:Name}}] = useRecoilState({{_input_:name}}State);
 
+useRecoilValue
+	const {{_input_:name}} = useRecoilValue({{_input_:name}}State);
+
+useSetRecoilState
+	const set{{_input_:Name}} = useSetRecoilState({{_input_:name}}State);
+
 useEffect
 	useEffect(() => {
 		{{_cursor_}}
