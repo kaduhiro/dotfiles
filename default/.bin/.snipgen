@@ -183,7 +183,7 @@ _snipgen() {
 	for num in $(echo $nums | sed 's/,/ /g'); do
 		local file=$(printf "$files" | sed -n ${num}p)
 
-		diff -u "$file" "$VSCODE_SNIPPET_DIR/$(basename $file)" || true
+		diff -u "$VSCODE_SNIPPET_DIR/$(basename $file)" "$file"|| true
 	done
 
 	printf "? update [y/N] " && read yn
