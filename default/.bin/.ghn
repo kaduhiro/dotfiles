@@ -45,7 +45,17 @@ _ghn() {
 
 		printf "? push ($repo) [y/N] " && read yn
 		if [ "$yn" = 'y' ]; then
-			gh repo create --private $repo
+			local visibility=private
+
+			printf "? visibility ($visibility) [private,public] " && read input
+			visibility=${input:-$visibility}
+
+			if [ "$visibility" != 'private' ] && [ "$visibility" != 'public' ]; then
+				echo "! visibility cannot be $visibility, only private or public"
+				exit 1
+			fi
+
+			gh repo create --$visibility $repo
 			git push -u origin main
 		fi
   fi
