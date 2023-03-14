@@ -7,21 +7,31 @@ _visnip() {
 
 	local templates=$(find "$TEMPLATE_PATH" -mindepth 1 -maxdepth 1 -type d | awk -F/ '{print $NF}')
 
-	echo "$templates" | nl
-	printf '? template (number or name) ' && read input
-	if [ -z "$input" ]; then
-		false
+	cat <<- EOF
+
+	Templates:
+	$(echo "$templates" | nl)
+	EOF
+
+	local n=$(.prompt 'template' 'number or name')
+	if [ -z "$n" ]; then
+		.failure 'input number or name'
 	fi
 
-	: ${template:=$(echo "$templates" | sed -n "${input}p" 2> /dev/null)}
-	: ${template:=$(echo "$templates" | grep -x "$input")}
-	: ${template:=$input}
+	: ${template:=$(echo "$templates" | sed -n "${n}p" 2> /dev/null)}
+	: ${template:=$(echo "$templates" | grep -x "$n")}
+	: ${template:=$n}
 
 	if [ -d "$TEMPLATE_PATH/$template" ]; then
 		local files=$(find "$TEMPLATE_PATH/$template" -name '*.stpl' -or -name 'base-*' -or -name 'file-*' -or -name 'snip-*' | awk -F'/' '{print $NF}')
 
-		echo "${files:-no template}" | nl
-		printf "? file (number, name, and empty is 1) " && read input
+		cat <<- EOF
+	
+		Files:
+		$(echo "${files:-no template}" | nl)
+		EOF
+
+		local input=$(.prompt 'file' 'number, name, and empty is 1')
 
 		[ -z "$input" ] && file=$(echo "$files" | sed -n 1p)
 
@@ -30,14 +40,14 @@ _visnip() {
 		: ${file:=$input}
 		: ${file:=$PATTERN_FILE}
 	else
-		printf "? create new template ($template) [y/N] " && read yn
+		local yn=$(.prompt "create new template '$template'" 'y/N')
 		if [ "$yn" != 'y' ]; then
-			false
+			return 0
 		fi
 
 		mkdir "$TEMPLATE_PATH/$template"
 
-		printf "? file ($PATTERN_FILE) " && read file
+		local file=$(.prompt 'file' "$PATTERN_FILE")
 		: ${file:=$PATTERN_FILE}
 	fi
 	
