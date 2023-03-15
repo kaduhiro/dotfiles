@@ -20,10 +20,9 @@ _snipgen() {
 	fi
 
 	if [ ! -d "$VSCODE_SNIPPET_DIR" ]; then
-		printf "? vscode snippet directory ($VSCODE_SNIPPET_DIR) " && read VSCODE_SNIPPET_DIR
+		VSCODE_SNIPPET_DIR=$(.prompt 'vscode snippet directory' "$VSCODE_SNIPPET_DIR")
 		if [ ! -d "$VSCODE_SNIPPET_DIR" ]; then
-			echo "! no such directory, $VSCODE_SNIPPET_DIR"
-			false
+			.failure "no such directory '$VSCODE_SNIPPET_DIR'."
 		fi
 	fi
 
@@ -171,13 +170,13 @@ _snipgen() {
 	printf "$lines" | nl -w 3 -s ''
 
 	if [ -z "$is_updated" ]; then
-		echo "! no updates"
+		.success 'no updates.'
 		return 0
 	fi
 
-	printf "? numbers (ssv or csv, 0 is all) " && read nums
+	local nums=$(.prompt 'numbers' 'ssv or csv, 0 is all')
 	if [ -z "$nums" ]; then
-		return 1
+		.failure 'no input.'
 	fi
 
 	for num in $(echo $nums | sed 's/,/ /g'); do
@@ -186,7 +185,7 @@ _snipgen() {
 		diff -u "$VSCODE_SNIPPET_DIR/$(basename $file)" "$file"|| true
 	done
 
-	printf "? update [y/N] " && read yn
+	local yn=$(.prompt 'update' 'y/N')
 	if [ "$yn" != 'y' ]; then
 		return 0
 	fi
@@ -194,12 +193,12 @@ _snipgen() {
 	for num in $(echo $nums | sed 's/,/ /g'); do
 		local file=$(printf "$files" | sed -n ${num}p)
 		if [ ! -f "$file" ]; then
-			echo "✘ no such file, $file"
+			.failure "no such file '$file'." || true
 			continue
 		fi
 
-		echo "✓ updated, $(basename $file)"
 		cp "$file" "$VSCODE_SNIPPET_DIR/$(basename $file)"
+		.success "updated '$(basename $file)'"
 	done
 }
 
