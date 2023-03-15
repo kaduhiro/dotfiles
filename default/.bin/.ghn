@@ -4,19 +4,18 @@ set -eu
 _ghn() {
 	local larges="$(find . -mindepth 1 -type f -size +50M)"
 	if [ -n "$larges" ]; then
-		cat <<- EOL
-		! warning: some files over the capacity limit ( >= 50mb )
+		.warning 'some files over the capacity limit ( >= 50mb )'
+		printf "$larges" | nl
+		.warning 'use .gitignore or .git/info/exlude for commit'
+	fi
 
-		files:
-		$(printf "$larges" | awk '{ printf("  %s\n", $0); }')
-
-		! use .gitignore or .git/info/exlude for commit
-		EOL
+	if git status > /dev/null 2>&1; then
+		.failure 'repository already exists.'
 	fi
 
 	local repo=${1:-$(basename $(pwd))}
 
-	printf "? create repository on github.com? ($repo) [y/N] " && read yn
+	local yn=$(.prompt "create repository '$repo' on github.com?" 'y/N')
 	if [ "$yn" = 'y' ]; then
 		local origin=$(gh auth status 2>&1 \
 			| awk '
@@ -43,16 +42,13 @@ _ghn() {
 		git br -m main
 		git remote add origin $origin/$repo.git
 
-		printf "? push ($repo) [y/N] " && read yn
+		yn=$(.prompt "push to '$repo'" 'y/N')
 		if [ "$yn" = 'y' ]; then
 			local visibility=private
-
-			printf "? visibility ($visibility) [private,public] " && read input
-			visibility=${input:-$visibility}
+			visibility=$(.prompt "visibility 'private' or 'public'" $visibility $visibility)
 
 			if [ "$visibility" != 'private' ] && [ "$visibility" != 'public' ]; then
-				echo "! visibility cannot be $visibility, only private or public"
-				exit 1
+				.failure "visibility cannot be $visibility, only private or public"
 			fi
 
 			gh repo create --$visibility $repo
