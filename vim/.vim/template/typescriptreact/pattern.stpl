@@ -13,6 +13,9 @@ export.type
 useState
 	const [{{_input_:name}}, set{{_input_:Name}}] = useState<{{_input_:type:boolean}}>({{_input_:default:true}});
 
+useRef
+	const {{_input_:name}}Ref = useRef<{{_input_:type:HTMLInputElement}}>({{_input_:default:null}});
+
 useRecoilState
 	const [{{_input_:name}}, set{{_input_:Name}}] = useRecoilState({{_input_:name}}State);
 
