@@ -72,7 +72,8 @@ fi
 zplug load
 
 # #################### complement ####################
-autoload -Uz compinit; compinit
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' ignore-parents parent pwd ..
