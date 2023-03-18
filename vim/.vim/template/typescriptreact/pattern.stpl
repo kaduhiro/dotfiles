@@ -50,6 +50,15 @@ map
 	  );
 	})}
 
+map.range
+	{[...Array({{_input_:number:10}})].map((_, {{_input_:index:i}}) => {
+	  return (
+	    <div key={ {{_input_:index:i}} }>
+	      {{_cursor_}}
+	    </div>
+	  );
+	})}
+
 sleep
 	const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 	await sleep(1000);
