@@ -46,7 +46,9 @@ _snipgen() {
 			dir=$(echo $dir | sed -e "s/^$(echo $differ | cut -d':' -f1)$/$(echo $differ | cut -d':' -f2)/")
 		done
 
-		awk -v "eol=$(cat $file | wc -l)" '
+		local body=$(cat "$file" $(find "$(dirname $file)" -type f -name 'snip-*'))
+
+		echo "$body" | awk -v "eol=$(echo "$body" | wc -l)" '
 			/^\t/ {
 				l = $0;
 	
@@ -68,6 +70,7 @@ _snipgen() {
 					name = target;
 					sub("{{_input_:", "", name);
 					sub("}}", "", name);
+
 					split(name, names, ":");
 
 					value = "";
@@ -76,8 +79,16 @@ _snipgen() {
 						value = names[2];
 					}
 
+					name_capitalize = toupper(substr(name, 1, 1)) substr(name, 2);
+					target_capitalize = target;
+					sub(name, name_capitalize, target_capitalize);
+
+					name_camel = tolower(substr(name, 1, 1)) substr(name, 2);
+					target_camel = target;
+					sub(name, name_camel, target_camel);
+
 					for (i = 0; i < length(vars); i++) {
-						if (name == vars[i]) {
+						if (vars[i] == name_capitalize || vars[i] == name_camel) {
 							break;
 						}
 					}
@@ -86,27 +97,18 @@ _snipgen() {
 						vars[length(vars)] = name;
 					}
 
-					if (length(value) > 0) {
-						replacement = "${" (i + 1) ":" value "}"
-					} else {
-						replacement = "$" (i + 1)
+					if (vars[i] == name_camel) {
+						replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/capitalize}/}";
+						gsub(target_capitalize, replacement, l);
 					}
 
+					if (vars[i] == name_capitalize) {
+						replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/camelcase}/}";
+						gsub(target_camel, replacement, l);
+					}
+
+					replacement = length(value) == 0 ? "$" (i + 1) : "${" (i + 1) ":" value "}" ;
 					gsub(target, replacement, l);
-
-					name_capitalize = toupper(substr(name, 1, 1)) substr(name, 2);
-					target_capitalize = target;
-					sub(name, name_capitalize, target_capitalize);
-					replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/capitalize}/}";
-
-					gsub(target_capitalize, replacement, l);
-
-					name_camel = tolower(substr(name, 1, 1)) substr(name, 2);
-					target_camel = target;
-					sub(name, name_camel, target_camel);
-					replacement = "${" (i + 1) "/(.*)/${" (i + 1) ":/camelcase}/}";
-
-					gsub(target_camel, replacement, l);
 				}
 
 				if (body) {
@@ -140,7 +142,7 @@ _snipgen() {
 			END {
 				printf("{\n%s\n}", json);
 			}
-		' "$file" > "$TMP_PATH/$dir.json"
+		' > "$TMP_PATH/$dir.json"
 	done
 
 	local is_updated=
