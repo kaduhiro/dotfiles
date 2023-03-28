@@ -20,6 +20,7 @@ _visnip() {
 
 	: ${template:=$(echo "$templates" | sed -n "${n}p" 2> /dev/null)}
 	: ${template:=$(echo "$templates" | grep -x "$n")}
+	: ${template:=$(echo "$templates" | grep -m1 "$n")}
 	: ${template:=$n}
 
 	if [ -d "$TEMPLATE_PATH/$template" ]; then
@@ -37,6 +38,7 @@ _visnip() {
 
 		: ${file:=$(echo "$files" | sed -n "${input}p" 2> /dev/null)}
 		: ${file:=$(echo "$files" | grep -x "$input")}
+		: ${file:=$(echo "$files" | grep -m1 "$input")}
 		: ${file:=$input}
 		: ${file:=$PATTERN_FILE}
 	else
