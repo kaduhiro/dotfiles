@@ -32,7 +32,7 @@ _visnip() {
 		$(echo "${files:-no template}" | nl)
 		EOF
 
-		local input=$(.prompt 'file' 'number, name, and empty is 1')
+		local input=$(.prompt 'file' 'number, name, and empty is first')
 
 		[ -z "$input" ] && file=$(echo "$files" | sed -n 1p)
 
