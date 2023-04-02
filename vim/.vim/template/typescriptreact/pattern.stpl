@@ -63,25 +63,15 @@ sleep
 	const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 	await sleep(1000);
 
-component
-	import { ReactNode, useState } from 'react';
-	
-	export type Props = {
-		children: ReactNode;
-	};
-	
-	const {{_input_:name}} = ({ children }: Props) => {
+page
+	export default function {{_input_:name:Index}}() {
 	  return (
-	    <>
-	      {children}
-	      {{_cursor_}}
-	    </>
+	    <{{_input_:layout:Default}}Layout title="{{_input_:title}}">
+	    </{{_input_:layout:Default}}Layout>
 	  );
 	};
-	
-	export default {{$1}};
 
-component.named
+component
 	export const {{_input_:name}} = () => {
 	  return (
 	    <>
