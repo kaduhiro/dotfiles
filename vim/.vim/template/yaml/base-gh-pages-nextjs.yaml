@@ -1,0 +1,64 @@
+name: {{_input_:name:GitHub Pages}}
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install packages
+        run: yarn --frozen-lockfile
+
+      - name: Build Next.js
+        run: yarn build
+      #  env:
+      #    URL_PREFIX: /{{_input_:repo:nextjs}} # if not using a custom domain, set repository name
+
+      - name: Export Next.js
+        run: yarn export
+
+      - name: Add nojekyll
+        run: touch out/.nojekyll
+
+      # if using a custom domain, set hostname
+      # - name: Add custom domain
+      #   run: echo {{_input_:hostname:localhost.localdomain}} > ./out/CNAME
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: out
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+
