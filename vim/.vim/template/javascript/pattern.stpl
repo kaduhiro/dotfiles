@@ -1,0 +1,19 @@
+writeFile
+	// import fs from 'fs';
+	try {
+	  fs.writeFileSync('{{_input_:out:a.out}}', '{{_cursor_}}'));
+	} catch (error) {
+	  console.error(error);
+	}
+
+readFile
+	// import fs from 'fs';
+	try {
+	  // from file
+	  const file = fs.readFileSync('{{_cursor_}}');
+	  // from URL
+	  const file = fetch('{{_input_:url:https://}}').then((res) => res.text()).catch((error) => { throw error; });
+	} catch (error) {
+	  console.error(error);
+	}
+
