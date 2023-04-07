@@ -80,54 +80,6 @@ component
 	  );
 	};
 
-usecase.\(\S\+\).\(\S\+\)
-	export type {{$1}}ListResponse = { {{$2}}s: {{$1}}[] };
-	
-	export const use{{$1}}List = (query: {{$1}}ListQuery) => {
-	  const repository = use{{$1}}Repository();
-	
-	  return useSWR<{{$1}}ListResponse>(
-	    {{$2}}CacheKeyGenerator.generateListKey({ query }),
-	    () => repository.list(query),
-	  );
-	}
-	
-	export type {{$1}}ReadResponse = { {{$2}}: {{$1}} };
-
-	export const use{{$1}}Read = (query: { id: {{$1}}['id'] }) => {
-	  const repository = use{{$1}}Repository();
-	
-	  return useSWR<{{$1}}ReadResponse>(
-	    {{$2}}CacheKeyGenerator.generateReadKey(query),
-	    () => repository.read(query),
-	  );
-	};
-
-repository.use.\(\S\+\)
-	export const use{{$1}}Repository = () => {
-	  const apiClient = useApiClient();
-	  return useMemo(() => create{{$1}}Repository(apiClient), [apiClient]);
-	};
-
-repository.create.\(\S\+\).\(\S\+\)
-	export const create{{$1}}Repository = (apiClient: ApiClient) => {
-	  async read({ id }: { id: {{$1}}['id'] }) {
-	    const { data } = await apiClient.get{{$1}}({ id })
-	
-	    return {
-	      {{$2}}: convert{{$1}}FromData(data.{{$2}}),
-	    };
-	  },
-	  async list(query: {{$1}}ListQuery) {
-	    const queryData = convert{{$1}}ListQueryToData(query);
-	    const { data } = await apiClient.get{{$1}}s(queryData);
-	
-	    return {
-	      {{$2}}: data.{{$2}}s.map(convert{{$1}}FromData),
-	    };
-	  },
-	};
-
 state
 	import { atom } from 'recoil';
 	import { recoilPersist } from 'recoil-persist';
@@ -148,17 +100,4 @@ state
 	  },
 	  effects_UNSTABLE: [persistAtom],
 	});
-
-api
-	import type { NextApiRequest, NextApiResponse } from 'next';
-	
-	const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-	  try {
-	    res.status(200).json({ message: success });
-	  } catch (error) {
-	    res.status(400).json({ message: error.message });
-	  }
-	};
-	
-	export default handler;
 
