@@ -101,3 +101,8 @@ state
 	  effects_UNSTABLE: [persistAtom],
 	});
 
+fontawesome
+	<FontAwesomeIcon
+	  icon={ fa{{_cursor_}} }
+	  className='h-{{_input_:size:4}} w-{{_input_:size:4}} transition duration-{{_input_:duration:200}} hover:cursor-pointer hover:opacity-{{_input_:opacity:50}}'
+	/>
