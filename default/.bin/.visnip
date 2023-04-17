@@ -24,6 +24,8 @@ _visnip() {
 	: ${template:=$n}
 
 	if [ -d "$TEMPLATE_PATH/$template" ]; then
+		.success "'$template' is selected"
+		
 		local files=$(find "$TEMPLATE_PATH/$template" -name '*.stpl' -or -name 'base-*' -or -name 'file-*' -or -name 'snip-*' | awk -F'/' '{print $NF}')
 
 		cat <<- EOF
