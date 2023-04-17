@@ -49,12 +49,19 @@ _visnip() {
 			return 0
 		fi
 
-		mkdir "$TEMPLATE_PATH/$template"
-
 		local file=$(.prompt 'file' "$PATTERN_FILE")
 		: ${file:=$PATTERN_FILE}
 	fi
 	
+	if [ ! -e "$TEMPLATE_PATH/$template/$file" ]; then
+		yn=$(.prompt "create new file '$template/$file'" 'y/N')
+		if [ "$yn" != 'y' ]; then
+			return 0
+		fi
+
+		mkdir -p "$TEMPLATE_PATH/$template"
+	fi
+
 	vi "$TEMPLATE_PATH/$template/$file"
 }
 
