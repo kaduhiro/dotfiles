@@ -18,7 +18,7 @@ _visnip() {
 		.failure 'input number or name'
 	fi
 
-	: ${template:=$(echo "$templates" | sed -n "${n}p" 2> /dev/null)}
+	expr "$n" + 1 >/dev/null 2>&1 && : ${template:=$(echo "$templates" | sed -n "${n}p" 2> /dev/null)}
 	: ${template:=$(echo "$templates" | grep -x "$n")}
 	: ${template:=$(echo "$templates" | grep -m1 "$n")}
 	: ${template:=$n}
@@ -36,7 +36,7 @@ _visnip() {
 
 		[ -z "$input" ] && file=$(echo "$files" | sed -n 1p)
 
-		: ${file:=$(echo "$files" | sed -n "${input}p" 2> /dev/null)}
+		expr "$input" + 1 >/dev/null 2>&1 && : ${file:=$(echo "$files" | sed -n "${input}p" 2> /dev/null)}
 		: ${file:=$(echo "$files" | grep -x "$input")}
 		: ${file:=$(echo "$files" | grep -m1 "$input")}
 		: ${file:=$input}
