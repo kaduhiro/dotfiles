@@ -74,3 +74,8 @@ let g:tcomment_types = {
 let g:tcomment_mapleader1 = ''
 map <silent><C-_> :TComment<CR>
 '''
+
+[[plugins]]
+repo = 'neoclide/coc.nvim'
+rev = 'release'
+merged = 0
