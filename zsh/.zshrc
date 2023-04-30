@@ -37,18 +37,6 @@ autoload -Uz select-word-style; select-word-style default
 zstyle ':zle:*' word-chars " /=;@:{},|"
 zstyle ':zle:*' word-style unspecified
 
-# version control
-autoload -Uz vcs_info
-autoload -Uz add-zsh-hook
-
-zstyle ':vcs_info:*' formats '%F{green}(%s)-[%b]%f'
-zstyle ':vcs_info:*' actionformats '%F{red}(%s)-[%b|%a]%f'
-
-_vcs_init() {
-	LANG=en_US.UTF-8 vcs_info
-	RPROMPT="${vcs_info_msg_0_}"
-}
-add-zsh-hook precmd _vcs_init
 
 # #################### option ####################
 setopt print_eight_bit
