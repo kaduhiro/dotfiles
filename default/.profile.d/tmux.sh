@@ -29,5 +29,5 @@ _tmux_ssh_agent
 
 # run when shell starts
 if [ -z $VSCODE_TASKS ] && [ -z $TMUX ] && type tmux > /dev/null; then
-	tmux a || tmux
+	tmux a
 fi
