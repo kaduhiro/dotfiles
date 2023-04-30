@@ -3,7 +3,21 @@
 # #################### general ####################
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-PROMPT="%{${fg[green]}%}[%n@%m %~]$%{${reset_color}%} "
+
+GIT_PROMPT_SHELL=~/.zsh/completion/git-prompt.sh
+if [ ! -e $GIT_PROMPT_SHELL ]; then
+	curl -fsSL -o $GIT_PROMPT_SHELL https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh
+fi
+source $GIT_PROMPT_SHELL
+
+GIT_PS1_SHOWDIRTYSTATE=true # (*)unstaged (+)staged
+GIT_PS1_SHOWUNTRACKEDFILES=true # (%)untracked
+GIT_PS1_SHOWSTASHSTATE=true # ($)stashed
+GIT_PS1_SHOWUPSTREAM=auto
+
+setopt PROMPT_SUBST ; PS1="
+%F{green}%n %F{blue}%~%F{red}$(__git_ps1)%f
+%F{cyan}❯%f "
 
 autoload -Uz colors; colors
 
