@@ -4,8 +4,10 @@
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+# prompt
 GIT_PROMPT_SHELL=~/.zsh/completion/git-prompt.sh
 if [ ! -e $GIT_PROMPT_SHELL ]; then
+	mkdir -p $(dirname $GIT_PROMPT_SHELL)
 	curl -fsSL -o $GIT_PROMPT_SHELL https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh
 fi
 source $GIT_PROMPT_SHELL
