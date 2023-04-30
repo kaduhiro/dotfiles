@@ -18,7 +18,7 @@ GIT_PS1_SHOWSTASHSTATE=true # ($)stashed
 GIT_PS1_SHOWUPSTREAM=auto
 
 setopt PROMPT_SUBST ; PS1="
-%F{green}%n %F{blue}%~%F{red}$(__git_ps1)%f
+%F{green}%n %F{magenta}%m %F{blue}%~%F{red}$(__git_ps1)%f
 %F{cyan}❯%f "
 
 autoload -Uz colors; colors
