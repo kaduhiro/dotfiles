@@ -1,0 +1,56 @@
+#!/bin/sh
+set -eu
+
+_piping() {
+	local host=http://share:8888
+	local src=${1:-}
+	local pv=$(type pv > /dev/null 2>&1 && echo ' | pv ')
+
+	if [ -z "$src" ]; then
+		name=$(.prompt "input name" 'require')
+		if [ -z "$name" ]; then
+			.failure "name is required"
+			exit 1
+		elif [ -e "$name" ]; then
+			.warning "'$name' already exists, will be override!"
+		fi
+		yn=$(.prompt "receive file '$name'?" 'y/N')
+		if [ "$yn" = 'y' ]; then
+			curl -O $host/$name
+		fi
+	elif [ -f "$src" ]; then
+		yn=$(.prompt "send file '$src'?" 'y/N')
+		if [ "$yn" = 'y' ]; then
+			cat $src $pv | curl -T - $host/$src
+		fi
+	elif [ -d "$src" ]; then
+		zt=$(.prompt 'zip? tar.gz?' 'z/t')
+		case "$zt" in
+		z|zip|t|tar)
+			;;
+		*)
+			.failure "unkonow format '$zt'"
+			exit 1
+		esac
+
+		yn=$(.prompt "send directory '$src'?" 'y/N')
+		if [ "$yn" != 'y' ]; then
+			zt=
+		fi
+
+		case "$zt" in
+		z|zip)
+			zip -q -r - "$src" $pv | curl -T - $host/$src.zip
+			;;
+		t|tar)
+			tar zfcp - "$src" $pv | curl -T - $host/$src.tar.gz
+			;;
+		*)
+		esac
+	else
+		.failure "no such resource '$src'"
+		exit 1
+	fi
+}
+
+_piping $@
