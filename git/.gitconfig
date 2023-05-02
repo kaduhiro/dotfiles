@@ -24,6 +24,8 @@
 	stt = status -uno
 	br = branch
 	sw = switch
+	rb = rebase
+	rbc = rebase --continue
 	co = checkout
 	cp = cherry-pick
 	ci = commit
