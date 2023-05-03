@@ -1,11 +1,11 @@
 [[plugins]]
+repo = 'tomasr/molokai'
+
+[[plugins]]
 repo = 'kana/vim-operator-replace'
 
 [[plugins]]
 repo = 'kana/vim-operator-user'
-
-[[plugins]]
-repo = 'tomasr/molokai'
 
 [[plugins]]
 repo = 'itchyny/lightline.vim'
