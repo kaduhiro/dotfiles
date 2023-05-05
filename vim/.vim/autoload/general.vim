@@ -1,37 +1,54 @@
+" --------------------------------------------------
+" encoding
+" --------------------------------------------------
 scriptencoding utf-8
 
+set fenc=utf-8
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set fileformats=unix,dos,mac
 
 set ambiwidth=double
 
+" --------------------------------------------------
+" visualization
+" --------------------------------------------------
 colorscheme molokai
-
-syntax enable
-autocmd BufNewFile,BufRead *.{html,htm,vue*} set filetype=html
-
-filetype plugin indent on
-
-set title
-set number
-set tabstop=2
-
+" hi NonText    ctermfg=236 guifg=#303030 "rgb=48,48,48
+" hi SpecialKey ctermfg=236 guifg=#303030 "rgb=48,48,48
 " set list
 " set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:･
 
-hi NonText    ctermfg=236 guifg=#303030 "rgb=48,48,48
-hi SpecialKey ctermfg=236 guifg=#303030 "rgb=48,48,48
-
+set title
+set number
+set signcolumn=yes
+set tabstop=2
+" wrap line
+set wrap
+set display=lastline
+" status line
+set laststatus=2
+" command line
 set wildmenu
 set wildmode=full
+" hightlight brackets
+set showmatch
+set matchtime=1
+" search
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set wrapscan
+" completion
+set pumheight=10
 
-set lazyredraw
-set ttyfast
+" --------------------------------------------------
+" history
+" --------------------------------------------------
+set history=10000
 
-set history=1000
-
-set undolevels=1000
+set undolevels=10000
 if has('persistent_undo')
     let undo_path = expand('~/.vim/undo')
     if !isdirectory(undo_path)
@@ -41,20 +58,26 @@ if has('persistent_undo')
     set undofile
 endif
 
-set clipboard+=unnamed
-set backspace=indent,eol,start
+" --------------------------------------------------
+" syntax
+" --------------------------------------------------
+syntax enable
 
-set showmatch
-set laststatus=2
-set nobackup
+autocmd BufNewFile,BufRead *.{html,htm} set filetype=html
+
+filetype plugin indent on
+
+" --------------------------------------------------
+" other
+" --------------------------------------------------
+" backup
 set noswapfile
-
-set incsearch
-set hlsearch
-set ignorecase
-set smartcase
-set wrapscan
-
+set nobackup
+" backspace in insert mode
+set backspace=2 " indent,eol,start
+" acceleration
+set lazyredraw
+set ttyfast
 " no indent when copy from clipboard
 if &term =~ "xterm"
     let &t_SI .= "\e[?2004h"
