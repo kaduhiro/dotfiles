@@ -1,120 +1,93 @@
-[[plugins]]
-repo = 'prettier/vim-prettier'
-do = 'yarn install'
-branch = 'release/1.x'
-for = [
-  'javascript',
-  'typescript',
-  'typescriptreact',
-  'css',
-  'less',
-  'scss',
-  'json',
-  'graphql',
-  'vue',
-  'yaml',
-  'html'
-]
-hook_add = '''
-autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.vue,*.css,*.scss,*.json PrettierAsync
-'''
-
-[[plugins]]
-repo = 'prabirshrestha/vim-lsp'
-hook_add = '''
-let g:lsp_signs_enabled = 1
-let g:lsp_diagnostics_enabled = 1
-let g:lsp_diagnostics_echo_cursor = 1
-let g:lsp_virtual_text_enabled = 1
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '‼'}
-let g:lsp_signs_information = {'text': 'i'}
-let g:lsp_signs_hint = {'text': '?'}
-
-nnoremap <Leader>r :LspRename<CR>
-
-if executable("deno")
-  augroup LspTypeScript
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
-    \ "name": "deno lsp",
-    \ "cmd": {server_info -> ["deno", "lsp"]},
-    \ "root_uri": {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), "tsconfig.json"))},
-    \ "whitelist": ["typescript", "typescriptreact"],
-    \ })
-  augroup END
-endif
-'''
-
-[[plugins]]
-repo = 'prabirshrestha/asyncomplete.vim'
-
-[[plugins]]
-repo = 'prabirshrestha/asyncomplete-lsp.vim'
-
-[[plugins]]
-repo = 'mattn/vim-lsp-settings'
-
-[[plugins]]
-repo = 'roxma/nvim-yarp'
-if = "!has('nvim')"
-
-[[plugins]]
-repo = 'roxma/vim-hug-neovim-rpc'
-if = "!has('nvim')"
-
-#[[plugins]]
-#repo = 'junegunn/fzf'
-#build = './install --all'
-#merged = '0'
-#hook_add = '''
-#"nnoremap <silent> <Leader>g :<C-u>silent call <SID>find_rip_grep()<CR>
-#"function! s:find_rip_grep() abort
-#"    call fzf#vim#grep(
-#"                \   'rg --ignore-file ~/.ignore --column --line-number --no-heading --hidden --smart-case .+',
-#"                \   1,
-#"                \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?'),
-#"                \   0,
-#"                \ )
-#"endfunction
-#nnoremap <silent> <Leader>f :<C-u> Files <CR>
-#'''
-#
-#[[plugins]]
-#repo = 'junegunn/fzf.vim'
-#depends = ['fzf']
-
+# --------------------------------------------------
+# finder
+# --------------------------------------------------
 [[plugins]]
 repo = 'lambdalisue/fern.vim'
+depends = [
+	'nerdfont.vim',
+	'fern-renderer-nerdfont.vim',
+	'glyph-palette.vim',
+	'fern-git-status.vim'
+]
 hook_add = '''
-let g:fern#default_hidden=1
-nnoremap <silent> <Leader>e :<C-u>Fern . -reveal=% -drawer -toggle -width=40<CR>
+let g:fern#default_hidden = 1 " show hidden files
+let g:fern#renderer = 'nerdfont'
+let g:fern#renderer#nerdfont#indent_markers = 1
+
+nnoremap <silent> <Leader>e :<C-u>Fern . -reveal=% -drawer -width=40<CR>
+
+"nnoremap <Plug>(fern-close-drawer) :<C-u>FernDo close -drawer -stay<CR>
+"nmap <buffer><silent> <Plug>(fern-action-open-and-close)
+"	\ <Plug>(fern-action-open)
+"	\ <Plug>(fern-close-drawer)
+
+function! s:fern_preview_init() abort
+  nmap <buffer><expr>
+        \ <Plug>(fern-my-preview-or-nop)
+        \ fern#smart#leaf(
+        \   "\<Plug>(fern-action-open:edit)\<C-w>p",
+        \   "",
+        \ )
+  nmap <buffer><expr> j
+        \ fern#smart#drawer(
+        \   "j\<Plug>(fern-my-preview-or-nop)",
+        \   "j",
+        \ )
+  nmap <buffer><expr> k
+        \ fern#smart#drawer(
+        \   "k\<Plug>(fern-my-preview-or-nop)",
+        \   "k",
+        \ )
+endfunction
+
+augroup my-fern-preview
+  autocmd! *
+  autocmd FileType fern call s:fern_preview_init()
+augroup END
+
+" You need this otherwise you cannot switch modified buffer
+set hidden
+'''
+[[plugins]]
+repo = 'lambdalisue/nerdfont.vim'
+[[plugins]]
+repo = 'lambdalisue/fern-renderer-nerdfont.vim'
+[[plugins]]
+repo = 'lambdalisue/glyph-palette.vim'
+hook_add = '''
+augroup my-glyph-palette
+  autocmd! *
+  autocmd FileType fern call glyph_palette#apply()
+  autocmd FileType nerdtree,startify call glyph_palette#apply()
+augroup END
+'''
+[[plugins]]
+repo = 'lambdalisue/fern-git-status.vim'
+
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+merged = 0
+hook_add = '''
+nnoremap <silent> <Leader>f :<C-u>FZF<CR>
+'''
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends = ['fzf']
+
+# --------------------------------------------------
+# snippet
+# --------------------------------------------------
+[[plugins]]
+repo = 'neoclide/coc.nvim'
+rev = 'release'
+merged = 0
+
+[[plugins]]
+repo = 'mattn/vim-sonictemplate'
+hook_add = '''
+let g:sonictemplate_author = 'kaduhiro'
+let g:sonictemplate_license = 'MIT'
+let g:sonictemplate_vim_template_dir = expand('~/.vim/template')
 '''
 
-[[plugins]]
-repo = 'kristijanhusak/defx-icons'
-
-[[plugins]]
-repo = 'kristijanhusak/defx-git'
-
-[[plugins]]
-repo = 'ryanoasis/vim-devicons'
-
-[[plugins]]
-repo = 'fatih/vim-go'
-on_ft = 'go'
-on_cmd = ['GoInstallBinaries']
-hook_add = '''
-let g:go_def_mapping_enabled = 0
-let g:go_doc_keywordprg_enabled = 0
-
-let g:go_fmt_command = "goimports" 
-
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck'] 
-
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_build_constraints = 1
-'''

@@ -1,11 +1,8 @@
+# --------------------------------------------------
+# visualization
+# --------------------------------------------------
 [[plugins]]
 repo = 'tomasr/molokai'
-
-[[plugins]]
-repo = 'kana/vim-operator-replace'
-
-[[plugins]]
-repo = 'kana/vim-operator-user'
 
 [[plugins]]
 repo = 'itchyny/lightline.vim'
@@ -50,12 +47,15 @@ augroup lightlineAutocmd
 augroup END
 '''
 
+# --------------------------------------------------
+# operation
+# --------------------------------------------------
 [[plugins]]
-repo = 'mattn/vim-sonictemplate'
+repo = 'kana/vim-operator-user'
+[[plugins]]
+repo = 'kana/vim-operator-replace'
 hook_add = '''
-let g:sonictemplate_author = 'Anonymous'
-let g:sonictemplate_license = 'MIT'
-let g:sonictemplate_vim_template_dir = expand('~/.vim/template')
+nmap r <Plug>(operator-replace)
 '''
 
 [[plugins]]
@@ -72,8 +72,3 @@ let g:tcomment_types = {
 let g:tcomment_mapleader1 = ''
 map <silent><C-_> :TComment<CR>
 '''
-
-[[plugins]]
-repo = 'neoclide/coc.nvim'
-rev = 'release'
-merged = 0
