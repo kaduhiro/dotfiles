@@ -65,15 +65,10 @@ augroup END
 repo = 'lambdalisue/fern-git-status.vim'
 
 [[plugins]]
-repo = 'junegunn/fzf'
-build = './install --all'
-merged = 0
+repo = '~/.zplug/repos/junegunn/fzf'
 hook_add = '''
 nnoremap <silent> <Leader>f :<C-u>FZF<CR>
 '''
-[[plugins]]
-repo = 'junegunn/fzf.vim'
-depends = ['fzf']
 
 # --------------------------------------------------
 # snippet
