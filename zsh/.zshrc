@@ -66,6 +66,13 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions"
 # zsh-256color
 zplug "chrissicool/zsh-256color"
+# fzf
+zplug "junegunn/fzf", \
+  from:github, \
+  as:command, \
+  rename-to:fzf, \
+  use:bin/fzf, \
+  hook-build:"$ZPLUG_HOME/repos/junegunn/fzf/install --all"
 
 if ! zplug check --verbose; then
 	printf "Install? [y/N]: "
@@ -87,6 +94,8 @@ zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 
 # #################### binding ####################
 bindkey '^R' history-incremental-pattern-search-backward
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # #################### alias ####################
 alias la='ls -a'
