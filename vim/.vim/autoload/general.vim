@@ -13,6 +13,11 @@ set ambiwidth=double
 " --------------------------------------------------
 " visualization
 " --------------------------------------------------
+" disable background color 
+autocmd ColorScheme * highlight Normal ctermbg=none
+autocmd ColorScheme * highlight LineNr ctermbg=none
+autocmd ColorScheme * highlight VertSplit ctermbg=none
+
 colorscheme molokai
 " hi NonText    ctermfg=236 guifg=#303030 "rgb=48,48,48
 " hi SpecialKey ctermfg=236 guifg=#303030 "rgb=48,48,48
