@@ -12,7 +12,7 @@ function _tmux_ssh_agent() {
 	fi
 	
 	case "$SOCKET" in
-	/tmp/*/agent.[0-9]*)
+	*/tmp/*/agent.[0-9]*)
 		echo "! activate ssh-agent, $SSH_AUTH_SOCK -> $SSH_AGENT"
 		ln -sfn "$SOCKET" "$SSH_AGENT"
 		;;
