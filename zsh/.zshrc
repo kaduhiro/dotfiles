@@ -72,7 +72,7 @@ zplug "junegunn/fzf", \
   as:command, \
   rename-to:fzf, \
   use:bin/fzf, \
-  hook-build:"$ZPLUG_HOME/repos/junegunn/fzf/install --all"
+  hook-build:"cd \"$ZPLUG_REOPS/junegunn/fzf\" && ./install --all"
 
 if ! zplug check --verbose; then
 	printf "Install? [y/N]: "
