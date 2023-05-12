@@ -131,6 +131,9 @@ alias .='source ~/.zshrc'
 alias zshrc='vi ~/.zshrc'
 alias .z='zshrc'
 
+alias .da='pushd ~/.dotapps'
+alias .df='pushd ~/.dotapps/home/dotfiles@kaduhiro'
+
 alias .install='~/.dotapps/etc/install.sh'
 
 # #################### profile ####################
