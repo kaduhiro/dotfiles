@@ -8,7 +8,7 @@ function _tmux_ssh_agent() {
 	
 	SOCKET=$SSH_AUTH_SOCK
 	if [ -S "$SOCKET" ]; then
-		SOCKET=$(readlink -f "$SOCKET")
+		SOCKET=$(readlink -f "$SOCKET" > /dev/null 2>&1 || .readlink "$SOCKET")
 	fi
 	
 	case "$SOCKET" in
