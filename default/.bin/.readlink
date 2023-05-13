@@ -1,0 +1,11 @@
+#!/bin/sh
+
+TARGET=${@:$#:1}
+
+while [ -n "$TARGET" ]; do
+    cd "$(dirname "$TARGET")"
+    FILENAME=$(basename "$TARGET")
+    TARGET=$(readlink "$FILENAME")
+done
+
+echo "$(pwd -P)/$FILENAME"
