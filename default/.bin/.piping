@@ -18,6 +18,9 @@ _piping() {
 		if [ "$yn" = 'y' ]; then
 			curl -O $host/$name
 		fi
+	elif [ "$src" = '--help' ]; then
+		# curl https://ppng.io/help
+		curl $host/help
 	elif [ -f "$src" ]; then
 		url="$host/$(basename "$src")"
 		yn=$(.prompt "send file '$src' at '$url'?" 'y/N')
