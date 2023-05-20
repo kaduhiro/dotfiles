@@ -19,34 +19,37 @@ _piping() {
 			curl -O $host/$name
 		fi
 	elif [ -f "$src" ]; then
-		yn=$(.prompt "send file '$src'?" 'y/N')
+		url="$host/$(basename "$src")"
+		yn=$(.prompt "send file '$src' at '$url'?" 'y/N')
 		if [ "$yn" = 'y' ]; then
-			cat $src $pv | curl -T - $host/$src
+			cat $src $pv | curl -T - "$url"
 		fi
 	elif [ -d "$src" ]; then
-		zt=$(.prompt 'zip? tar.gz?' 'z/t')
-		case "$zt" in
-		z|zip|t|tar)
+		cmd=
+		EXT=tar.gz
+
+		dir=$(basename "$src")
+		ext=$(.prompt 'tar.gz? zip?' "$EXT")
+		: ${ext:=$EXT}
+		case "$ext" in
+		zip)
+			cmd="zip -q -r - $src"
+			;;
+		tar\.gz)
+			cmd="tar zfcp - $src"
 			;;
 		*)
-			.failure "unkonow format '$zt'"
+			.failure "unkonow format '$ext'"
 			exit 1
 		esac
 
-		yn=$(.prompt "send directory '$src'?" 'y/N')
+		url="$host/$dir.$ext"
+		yn=$(.prompt "send directory as '$dir.$ext'? at '$url'" 'y/N')
 		if [ "$yn" != 'y' ]; then
-			zt=
+			exit 0
 		fi
 
-		case "$zt" in
-		z|zip)
-			zip -q -r - "$src" $pv | curl -T - $host/$src.zip
-			;;
-		t|tar)
-			tar zfcp - "$src" $pv | curl -T - $host/$src.tar.gz
-			;;
-		*)
-		esac
+		$cmd $pv | curl -T - "$url"
 	else
 		.failure "no such resource '$src'"
 		exit 1
