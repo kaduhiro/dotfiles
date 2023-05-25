@@ -13,6 +13,10 @@ _ghn() {
 		.failure 'repository already exists.'
 	fi
 
+	if ! gh auth status > /dev/null 2>&1; then
+		.failure 'to get started with GitHub CLI, please run: gh auth login'
+	fi
+
 	local repo=${1:-$(basename $(pwd))}
 
 	local yn=$(.prompt "create repository '$repo' on github.com?" 'y/N')
