@@ -37,7 +37,7 @@ helloworld() {
 		done
 
 		for f in $(find "$repository" -name package.json); do
-			cat "$f" | sed -E "s/(.name.: )(.)$template.,/\1\2$service\2,/g" | tee "$f" > /dev/null
+			cat "$f" | sed -E "s/(.name.|.description.): (.)$template.,/\1: \2$service\2,/g" | tee "$f" > /dev/null
 			.success "replace service name '$template' to '$service' in '$f'."
 		done
 	fi
