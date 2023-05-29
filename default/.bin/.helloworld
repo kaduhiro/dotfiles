@@ -2,7 +2,7 @@
 set -eu
 
 helloworld() {
-	local TEMPLATES=$(printf 'helloworld nextjs gas' | tr ' ' '\n')
+	local TEMPLATES=$(printf 'helloworld nextjs gas chrome-extension' | tr ' ' '\n')
 	local TEMPLATE=$(printf "$TEMPLATES" | head -n1)
 
 	echo 'Templates:'
@@ -31,24 +31,25 @@ helloworld() {
 			.success "replace service name '$template' to '$service' in '$f'."
 		done
 
-		if [ "$template" = 'gas' ]; then
-			f="$repository/.env.local"
-			cp "$repository/.env.local.template" "$f"
-			cat "$f" | sed -E "s/^(PROJECT=)$/\1${service##gas-}/g" | tee "$f" > /dev/null
-			.success "create new '.env.local'"
-		fi
-
-		if [ "$template" != 'gas' ]; then
-			for f in $(find "$repository" -name docker-compose.yml); do
-				cat "$f" | sed -E "s/([[:space:]]|\/)$template/\1$service/g" | tee "$f" > /dev/null
-				.success "replace service name '$template' to '$service' in '$f'."
-			done
-		fi
-
 		for f in $(find "$repository" -name package.json); do
 			cat "$f" | sed -E "s/(.name.|.description.): (.)$template.,/\1: \2$service\2,/g" | tee "$f" > /dev/null
 			.success "replace service name '$template' to '$service' in '$f'."
 		done
+
+		case "$template" in
+		gas|chrome-extension)
+			f="$repository/.env.local"
+			n=$(echo $service | sed -e 's/^\(gas\|chrome-extension\)-//')
+			cp "$repository/.env.local.template" "$f"
+			cat "$f" | sed -E "s/^(PROJECT=)$/\1$n/g" | tee "$f" > /dev/null
+			.success "create new '.env.local' in project '$n'"
+			;;
+		*)
+			for f in $(find "$repository" -name docker-compose.yml); do
+				cat "$f" | sed -E "s/([[:space:]]|\/)$template/\1$service/g" | tee "$f" > /dev/null
+				.success "replace service name '$template' to '$service' in '$f'."
+			done
+		esac
 	fi
 }
 
