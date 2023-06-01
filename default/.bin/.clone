@@ -2,6 +2,8 @@
 set -eu
 
 clone() {
+	local env=.clone
+
 	local dir=$(pwd)
 	local name=$(basename "$dir")
 
@@ -15,15 +17,20 @@ clone() {
 		.failure "empty name"
 	fi
 
-	local user=$(.prompt 'user' "$USER")
-	: ${user:=$USER}
-	local host=$(.prompt 'host' 'require')
-	local excludes=$(.prompt 'excludes' '.history')
+	if [ -f "$dir/$name/$env" ]; then
+		export $(cat "$dir/$name/$env" | xargs)
+	fi
 
-	local exclude_opts=
-	for exclude in ${excludes:-.history}; do
+	local user=$(.prompt 'user' "${CLONE_USER:-$USER}" "${CLONE_USER:-$USER}")
+	local host=$(.prompt 'host' "${CLONE_HOST:-require}" "${CLONE_HOST:-}")
+	local excludes=$(echo ${CLONE_EXCLUDES:-.history} | tr ',' ' ')
+	excludes=$(.prompt 'excludes' "$excludes" "$excludes")
+
+	local exclude_opts="--exclude $env"
+	for exclude in $(echo $excludes | tr ',' ' '); do
 		exclude_opts="$exclude_opts --exclude $exclude"
 	done
+	excludes=$(echo $excludes | tr -s ' ' ',')
 
 	if ! ssh $user@$host test -d $dir/$name; then
 		.failure "ssh failure '$user@$host'"
@@ -87,6 +94,14 @@ clone() {
 		*)
 			exit 1
 	esac
+
+	cat <<- EOF > "$dir/$name/$env"
+	CLONE_USER=$user
+	CLONE_HOST=$host
+	CLONE_EXCLUDES="$excludes"
+	EOF
+
+	.success "saved to '$env'"
 }
 
 num() {
