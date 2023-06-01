@@ -29,15 +29,15 @@ clone() {
 		.failure "ssh failure '$user@$host'"
 	fi
 
-	local cmd="rsync -e ssh --delete $exclude_opts"
+	local rsync="rsync -e ssh --delete $exclude_opts"
  	local localsrc=$dir/$name/
 	local remotesrc=$user@$host:$dir/$name/
 
-	local pull_files=$($cmd -anuvz $remotesrc $localsrc 2> /dev/null | tail -n +2 | head -n -3)
+	local pull_files=$($rsync -anuvz $remotesrc $localsrc 2> /dev/null | tail -n +2 | head -n -3)
 	local pull_add_num=$(printf "%s" "$pull_files" | awk '!/(^created directory |^deleting |\/$)/' | wc -l)
 	local pull_del_num=$(printf "%s" "$pull_files" | awk '/^deleting /' | wc -l)
 
-	local push_files=$($cmd -anuvz $localsrc $remotesrc 2> /dev/null | tail -n +2 | head -n -3)
+	local push_files=$($rsync -anuvz $localsrc $remotesrc 2> /dev/null | tail -n +2 | head -n -3)
 	local push_add_num=$(printf "%s" "$push_files" | awk '!/(^created directory |^deleting |\/$)/' | wc -l)
 	local push_del_num=$(printf "%s" "$push_files" | awk '/^deleting /' | wc -l)
 
@@ -77,11 +77,11 @@ clone() {
 				"$(printf "%s" "$push_files" | awk "$rule")"
 			;;
 		u)
-			$cmd -auvz $remotesrc $localsrc
+			$rsync -auvz $remotesrc $localsrc
 			.success "pulled"
 			;;
 		p)
-			$cmd -auvz $localsrc $remotesrc
+			$rsync -auvz $localsrc $remotesrc
 			.success "pushed"
 			;;
 		*)
