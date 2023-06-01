@@ -1,0 +1,102 @@
+#!/bin/sh
+set -eu
+
+clone() {
+	local dir=$(pwd)
+	local name=$(basename "$dir")
+
+	if git status > /dev/null 2>&1; then
+		dir=$(dirname "$dir")
+	else
+		name=${1:-}
+	fi
+
+	if [ -z "$name" ]; then
+		.failure "empty name"
+	fi
+
+	local user=$(.prompt 'user' "$USER")
+	: ${user:=$USER}
+	local host=$(.prompt 'host' 'require')
+	local excludes=$(.prompt 'excludes' '.history')
+
+	local exclude_opts=
+	for exclude in ${excludes:-.history}; do
+		exclude_opts="$exclude_opts --exclude $exclude"
+	done
+
+	if ! ssh $user@$host test -d $dir/$name; then
+		.failure "ssh failure '$user@$host'"
+	fi
+
+	local cmd="rsync -e ssh --delete $exclude_opts"
+ 	local localsrc=$dir/$name/
+	local remotesrc=$user@$host:$dir/$name/
+
+	local pull_files=$($cmd -anuvz $remotesrc $localsrc 2> /dev/null | tail -n +2 | head -n -3)
+	local pull_add_num=$(printf "%s" "$pull_files" | awk '!/(^created directory |^deleting |\/$)/' | wc -l)
+	local pull_del_num=$(printf "%s" "$pull_files" | awk '/^deleting /' | wc -l)
+
+	local push_files=$($cmd -anuvz $localsrc $remotesrc 2> /dev/null | tail -n +2 | head -n -3)
+	local push_add_num=$(printf "%s" "$push_files" | awk '!/(^created directory |^deleting |\/$)/' | wc -l)
+	local push_del_num=$(printf "%s" "$push_files" | awk '/^deleting /' | wc -l)
+
+	if [ $pull_add_num -eq 0 -a $pull_del_num -eq 0 -a $push_add_num -eq 0 -a $push_del_num -eq 0 ]; then
+		.success 'nothing to update'
+		exit 0
+	fi
+
+	local rule=$(cat <<- EOF
+		!/(^created directory |^deleting |\/$)/ { print " * " \$0; }
+		/^created directory /                   { print " + " \$3; }
+		/^deleting /                            { print " - " \$2; }
+		EOF
+	)
+
+	printf "PULL: add %s files, delete %s files\n%s\n\n" \
+		"$(num $pull_add_num)" \
+		"$(num $(($pull_del_num * -1)))" \
+		"$(printf "%s" "$pull_files" | awk "$rule" | head -n 10)"
+
+	printf "PUSH: add %s files, delete %s files\n%s\n\n" \
+		"$(num $push_add_num)" \
+		"$(num $(($push_del_num * -1)))" \
+		"$(printf "%s" "$push_files" | awk "$rule" | head -n 10)"
+
+	local yn=$(.prompt "show all files(s) pull(u) push(p)" 's/u/p/N')
+	case "$yn" in
+		s)
+			printf "PULL: add %s files, delete %s files\n%s\n\n" \
+				"$(num $pull_add_num)" \
+				"$(num $(($pull_del_num * -1)))" \
+				"$(printf "%s" "$pull_files" | awk "$rule")"
+		
+			printf "PUSH: add %s files, delete %s files\n%s\n\n" \
+				"$(num $push_add_num)" \
+				"$(num $(($push_del_num * -1)))" \
+				"$(printf "%s" "$push_files" | awk "$rule")"
+			;;
+		u)
+			$cmd -auvz $remotesrc $localsrc
+			.success "pulled"
+			;;
+		p)
+			$cmd -auvz $localsrc $remotesrc
+			.success "pushed"
+			;;
+		*)
+			exit 1
+	esac
+}
+
+num() {
+	if [ $1 -lt 0 ]; then
+		printf "\033[1;31m%+d\033[m\n" $1
+	elif [ $1 -gt 0 ]; then
+		printf "\033[1;32m%+d\033[m\n" $1
+	else
+		printf "\033[2;37m%+d\033[m\n" $1
+	fi
+}
+
+clone $@
