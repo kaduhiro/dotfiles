@@ -89,7 +89,7 @@ endfunction
 repo = 'junegunn/fzf.vim'
 
 # --------------------------------------------------
-# snippet
+# editor
 # --------------------------------------------------
 [[plugins]]
 repo = 'neoclide/coc.nvim'
