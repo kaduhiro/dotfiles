@@ -20,9 +20,8 @@ bind generic P      ?git push -u %(remote) %(repo:head)
 bind generic +      !git commit --amend --allow-empty
 
 # ########## git checkout ##########
-bind main    =      ?git checkout %(branch)
 bind refs    =      ?git checkout %(branch)
-bind main    <Esc>= ?git checkout %(commit)
+bind main    =      ?git checkout %(commit)
 
 # previous branch
 bind generic -      ?git checkout -
