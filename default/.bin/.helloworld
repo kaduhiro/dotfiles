@@ -22,6 +22,9 @@ helloworld() {
 
 	local service=$(.prompt 'service name' $repository $repository)
 
+	local ENVIRONMENTS=$(printf 'development production' | tr ' ' '\n')
+	local environment=$(.promptls 'environment' "$ENVIRONMENTS" "$(printf "$ENVIRONMENTS" | head -n1)")
+
 	if [ "$service" != "$template" ]; then
 		echo "# $service" > "$repository/README.md"
 		.success "create file 'README.md'."
@@ -36,13 +39,20 @@ helloworld() {
 			.success "replace service name '$template' to '$service' in '$f'."
 		done
 
+		local ENV_LOCAL="$repository/.env.local"
+		if [ -f "$ENV_LOCAL.template" ]; then
+			cp "$ENV_LOCAL.template" "$ENV_LOCAL"
+			.success "create new '.env.local'"
+
+			cat "$ENV_LOCAL" | sed -E "s/^(ENVIRONMENT=)$/\1$environment/g" | tee "$ENV_LOCAL" > /dev/null
+			.success "set environment '$environment' in '.env.local'"
+		fi
+
 		case "$template" in
 		gas|chrome-extension)
-			f="$repository/.env.local"
-			n=$(echo $service | sed -e 's/^\(gas\|chrome-extension\)-//')
-			cp "$repository/.env.local.template" "$f"
-			cat "$f" | sed -E "s/^(PROJECT=)$/\1$n/g" | tee "$f" > /dev/null
-			.success "create new '.env.local' in project '$n'"
+			n=$(echo $service | sed -E 's/^(gas|chrome-extension)-//')
+			cat "$ENV_LOCAL" | sed -E "s/^(PROJECT=)$/\1$n/g" | tee "$ENV_LOCAL" > /dev/null
+			.success "set project name '$n' in '.env.local'"
 			;;
 		*)
 			for f in $(find "$repository" -name docker-compose.yml); do
