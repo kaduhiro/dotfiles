@@ -26,7 +26,7 @@ helloworld() {
 		echo "# $service" > "$repository/README.md"
 		.success "create file 'README.md'."
 
-		for f in $(find "$repository" -name Makefile); do
+		for f in $(find "$repository" -name Makefile -or -name .env); do
 			cat "$f" | sed -E "s/(SERVICE *:?= *)$template/\1$service/g" | tee "$f" > /dev/null
 			.success "replace service name '$template' to '$service' in '$f'."
 		done
