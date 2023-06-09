@@ -1,6 +1,9 @@
 # ########## general ##########
 # view commit id in main view
 set main-view = id date author commit-title:graph=yes,refs=yes
+# page scroll
+bind generic <Ctrl-f> move-page-down
+bind generic <Ctrl-b> move-page-up
 
 # ########## git fetch ##########
 bind generic F      ?git fetch %(remote)
