@@ -51,6 +51,12 @@ helloworld() {
 		case "$template" in
 		gas|chrome-extension)
 			n=$(echo $service | sed -E 's/^(gas|chrome-extension)-//')
+
+			for f in $(find "$repository" -name .env); do
+				cat "$f" | sed -E "s/(SERVICE *:?= *)(gas|chrome-extension)-$n/\1\2/g" | tee "$f" > /dev/null
+				.success "remove project name from service name in '$f'."
+			done
+
 			cat "$ENV_LOCAL" | sed -E "s/^(PROJECT=)$/\1$n/g" | tee "$ENV_LOCAL" > /dev/null
 			.success "set project name '$n' in '.env.local'"
 			;;
