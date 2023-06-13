@@ -1,0 +1,12 @@
+#!/bin/sh
+
+_upper() {
+	cat - | tr '[a-z]' '[A-Z]'
+}
+
+if [ -p /dev/stdin ]; then
+	cat - | _upper
+else
+	echo $@ | _upper
+fi
+
