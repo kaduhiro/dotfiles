@@ -1,0 +1,12 @@
+#!/bin/sh
+
+_lower() {
+	cat - | tr '[A-Z]' '[a-z]'
+}
+
+if [ -p /dev/stdin ]; then
+	cat - | _lower
+else
+	echo $@ | _lower
+fi
+
