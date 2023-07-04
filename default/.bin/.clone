@@ -23,7 +23,7 @@ clone() {
 
 	local user=$(.prompt 'user' "${CLONE_USER:-$USER}" "${CLONE_USER:-$USER}")
 	local host=$(.prompt 'host' "${CLONE_HOST:-require}" "${CLONE_HOST:-}")
-	local excludes=$(echo ${CLONE_EXCLUDES:-.history} | tr ',' ' ')
+	local excludes=$(echo ${CLONE_EXCLUDES:-.history,.clone} | tr ',' ' ')
 	excludes=$(.prompt 'excludes' "$excludes" "$excludes")
 
 	local exclude_opts="--exclude $env"
