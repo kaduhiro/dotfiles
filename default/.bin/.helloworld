@@ -73,9 +73,9 @@ helloworld() {
 		s="$repository/src"
 
 		rm -rf "$s/constants" "$s/libraries" "$s/types"
-		git clone --filter=blob:none --no-checkout git@github.com:kaduhiro/$template "$s/modules/$template"
+		git clone --filter=blob:none --no-checkout git@github.com:kaduhiro/$template "$s/_/$template"
 
-		cd "$s/modules/$template"
+		cd "$s/_/$template"
 		git sparse-checkout set src/constants src/libraries src/types
 		git checkout
 		;;
