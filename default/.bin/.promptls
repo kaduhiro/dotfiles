@@ -11,6 +11,7 @@ read _input_
 _output_=
 : ${_output_:=$(printf "$2" | awk 'NR=="'$_input_'"')}
 : ${_output_:=$(printf "$2" | grep -x "$_input_")}
+: ${_output_:=$(printf "$2" | grep -m1 "$_input_")}
 : ${_output_:=${_input_:-$3}}
 
 printf "$_output_"
