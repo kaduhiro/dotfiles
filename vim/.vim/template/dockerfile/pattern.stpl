@@ -1,7 +1,7 @@
 alpine
-	ARG VERSION=latest
+	ARG OS_VERSION=latest
 	
-	FROM alpine:${VERSION}
+	FROM alpine:${OS_VERSION}
 	LABEL maintainer="kaduhiro <github@kaduhiro.com>"
 	
 	RUN apk update \
