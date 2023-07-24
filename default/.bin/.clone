@@ -33,7 +33,7 @@ clone() {
 	excludes=$(echo $excludes | tr -s ' ' ',')
 
 	if ! ssh $user@$host test -d $dir/$name; then
-		.failure "ssh failure '$user@$host'"
+		.failure "invalid target '$dir/$name' in '$user@$host'"
 	fi
 
 	local rsync="rsync -e ssh --delete $exclude_opts"
