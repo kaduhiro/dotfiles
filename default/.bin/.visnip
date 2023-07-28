@@ -6,22 +6,10 @@ _visnip() {
 	local PATTERN_FILE=pattern.stpl
 
 	local templates=$(find "$TEMPLATE_PATH" -mindepth 1 -maxdepth 1 -type d | awk -F/ '{print $NF}')
-
-	cat <<- EOF
-
-	Templates:
-	$(echo "$templates" | nl)
-	EOF
-
-	local n=$(.prompt 'template' 'number or name')
-	if [ -z "$n" ]; then
+	local template=$(.promptls 'template' "$templates" 'number or name')
+	if [ -z "$template" ]; then
 		.failure 'input number or name'
 	fi
-
-	expr "$n" + 1 >/dev/null 2>&1 && : ${template:=$(echo "$templates" | sed -n "${n}p" 2> /dev/null)}
-	: ${template:=$(echo "$templates" | grep -x "$n")}
-	: ${template:=$(echo "$templates" | grep -m1 "$n")}
-	: ${template:=$n}
 
 	if [ -d "$TEMPLATE_PATH/$template" ]; then
 		.success "'$template' is selected"
