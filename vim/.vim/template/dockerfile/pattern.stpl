@@ -30,9 +30,9 @@ ubuntu
 	    && rm -rf /var/lib/apt/lists/*
 
 ubuntu.build
-	ARG VERSION=22.04
+	ARG OS_VERSION=22.04
 	
-	FROM ubuntu:${VERSION}
+	FROM ubuntu:${OS_VERSION}
 	LABEL maintainer="kaduhiro <github@kaduhiro.com>"
 	
 	RUN apt-get update \
