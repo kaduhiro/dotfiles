@@ -6,7 +6,7 @@ helloworld() {
 	local TEMPLATE=$(printf "$TEMPLATES" | head -n1)
 
 	echo 'Templates:'
-	local template=$(.promptls template "$TEMPLATES" $TEMPLATE)
+	local template=$(.promptls 'template' "$TEMPLATES" $TEMPLATE)
 	.success "template '$template' is set."
 
 	local repository=$(.prompt 'repository name' 'required')
