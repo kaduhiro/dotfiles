@@ -34,6 +34,7 @@
 	ciad = !"git commit --amend --date \"$(date)\""
 	pushf = push --force-with-lease
 	ss = stash
+	ssu = "!f(){ printf '\\033[1;36m?\\033[m stash message \\033[2;37m(branch name)\\033[m '&& read m && git stash save -u \"${m:-$(git rev-parse --abbrev-ref HEAD)}\"; };f"
 	ssmv = "!f(){ [ -n \"$1\" ] && git stash store -m \"${2:-renamed}\" $(git stash drop ${1:-0} | sed 's/^.*(\\(.*\\))$/\\1/'); };f"
 	diffc = diff --cached
 	difff = diff --word-diff
