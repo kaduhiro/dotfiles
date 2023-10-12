@@ -35,6 +35,8 @@
 	pushf = push --force-with-lease
 	ss = stash
 	sss = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && printf \"\\033[1;36m?\\033[m stash message \\033[2;37m($b)\\033[m \" && read m && git stash save -u \"${m:-$b}\"; };f"
+	ssa = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F: -v b=$b '$2~b{print $1;}' | head -n 1) && printf \"\\033[1;36m?\\033[m apply $s \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git stash apply --index $s; };f"
+	ssp = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F: -v b=$b '$2~b{print $1;}' | head -n 1) && printf \"\\033[1;36m?\\033[m pop $s \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git stash pop --index $s; };f"
 	ssmv = "!f(){ [ -n \"$1\" ] && git stash store -m \"${2:-renamed}\" $(git stash drop ${1:-0} | sed 's/^.*(\\(.*\\))$/\\1/'); };f"
 	diffc = diff --cached
 	difff = diff --word-diff
