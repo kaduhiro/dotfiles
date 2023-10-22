@@ -67,6 +67,8 @@ repo = 'lambdalisue/fern-git-status.vim'
 [[plugins]]
 repo = '~/.zplug/repos/junegunn/fzf'
 hook_add = '''
+let g:fzf_layout = {'window': {'width': 0.95, 'height': 0.95}}
+
 " fzf
 nnoremap <silent> <Leader>p :<C-u>silent call <SID>find_fzf()<CR>
 function! s:find_fzf() abort
