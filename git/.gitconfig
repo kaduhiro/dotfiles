@@ -17,6 +17,7 @@
 	default = current
 
 [pull]
+	ff = only
 	rebase = false
 
 [alias]
