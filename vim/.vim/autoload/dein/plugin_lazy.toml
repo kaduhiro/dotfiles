@@ -79,7 +79,18 @@ endfunction
 
 " ripgrep
 nnoremap <silent> <Leader>P :<C-u>silent call <SID>find_rip_grep()<CR>
+nnoremap <silent> <Leader><Esc>P :<C-u>silent call <SID>find_rip_grep_all()<CR>
+
 function! s:find_rip_grep() abort
+  call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always --hidden --smart-case --glob="!.history/" --glob="!tests/" --glob="!__tests__/" .+',
+    \   1,
+    \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?'),
+    \   0,
+    \ )
+endfunction
+
+function! s:find_rip_grep_all() abort
   call fzf#vim#grep(
     \   'rg --column --line-number --no-heading --color=always --hidden --smart-case .+',
     \   1,
