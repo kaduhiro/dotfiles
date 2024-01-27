@@ -72,7 +72,7 @@ zplug "junegunn/fzf", \
   as:command, \
   rename-to:fzf, \
   use:bin/fzf, \
-  hook-build:"cd \"$ZPLUG_REOPS/junegunn/fzf\" && ./install --all"
+  hook-build:". $ZPLUG_REPOS/junegunn/fzf/install --bin"
 zplug "BurntSushi/ripgrep", \
   from:github, \
   as:command, \
