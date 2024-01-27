@@ -138,6 +138,7 @@ alias .install='~/.dotapps/etc/install.sh'
 
 # #################### profile ####################
 if [ -f ~/.profile ]; then
+	sed -i -E 's/^\..*cargo\/env.*$/#\0/' ~/.profile # never ending loading?
 	source ~/.profile
 fi
 
