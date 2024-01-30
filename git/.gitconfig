@@ -29,6 +29,7 @@
 	rb = rebase
 	rbc = rebase --continue
 	co = checkout
+	cot = checkout --theirs .
 	sco = sparse-checkout
 	cp = cherry-pick
 	ci = commit
