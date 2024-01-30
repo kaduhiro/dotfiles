@@ -21,6 +21,7 @@
 	rebase = false
 
 [alias]
+	ssh = "!f(){ ssh -T git@github.com; };f"
 	st = status
 	stt = status -uno
 	br = branch
