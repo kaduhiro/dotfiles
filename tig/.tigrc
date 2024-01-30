@@ -24,7 +24,8 @@ bind generic +      !git commit --amend --allow-empty
 
 # ########## git checkout ##########
 bind refs    =      ?git checkout %(branch)
-bind main    =      ?git checkout %(commit)
+bind main    =      ?git checkout %(branch)
+bind main    <Esc>=      ?git checkout %(commit)
 
 # previous branch
 bind generic -      ?git checkout -
