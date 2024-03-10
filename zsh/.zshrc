@@ -76,7 +76,7 @@ zplug "junegunn/fzf", \
 zplug "BurntSushi/ripgrep", \
   from:github, \
   as:command, \
-  hook-build:"rg --version >/dev/null 2>&1 || (cd \"$ZPLUG_REPOS/BurntSushi/ripgrep\" && cargo build --release --features 'pcre2' && cp target/release/rg \"$ZPLUG_BIN\")" # feature 'simd-accel' can not use?
+  hook-build:"rg --version >/dev/null 2>&1 || (cd $ZPLUG_REPOS/BurntSushi/ripgrep && cargo build --release --features 'pcre2' && cp target/release/rg $ZPLUG_BIN)" # feature 'simd-accel' can not use?
 
 if ! zplug check --verbose; then
 	printf "Install? [y/N]: "
