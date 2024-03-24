@@ -1,0 +1,11 @@
+# Key Repeat
+defaults write -g ApplePressAndHoldEnabled -bool false
+defaults write -g InitialKeyRepeat -int 15
+
+# Delay Until Repeat
+defaults write -g KeyRepeat -int 2
+
+# Adjust keyboard brightness in low light
+NPLIST="/private/var/root/Library/Preferences/com.apple.CoreBrightness.plist"
+sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightABEnabled 0" ${NPLIST}
+sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightIdleDimTime 0" ${NPLIST}
