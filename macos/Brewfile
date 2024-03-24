@@ -11,15 +11,13 @@ brew "tig"
 brew "tmux"
 cask "alfred"
 cask "appcleaner"
-cask "figma"
 cask "google-chrome"
 cask "google-drive"
-cask "google-japanese-ime"
 cask "iterm2"
 cask "notion"
 cask "slack"
+cask "splashtop-business"
 cask "visual-studio-code"
-cask "vlc"
 mas "Amphetamine", id: 937984704
 mas "LINE", id: 539883307
 mas "Tailscale", id: 1475387142
