@@ -70,16 +70,23 @@ hook_add = '''
 let g:fzf_layout = {'window': {'width': 0.95, 'height': 0.95}}
 
 " fzf
-nnoremap <silent> <Leader>p :<C-u>silent call <SID>find_fzf()<CR>
-nnoremap <silent> <Leader><Esc>p :<C-u>silent call <SID>find_fzf_all()<CR>
+nnoremap <silent> <Leader>p :<C-u>silent call <SID>find_fzf()<CR> " git files only
+nnoremap <silent> <Leader><Esc>p :<C-u>silent call <SID>find_fzf_all()<CR> " include all files
 
 function! s:find_fzf() abort
-	call fzf#vim#gitfiles('', {'options': '--info=inline --preview "cat {}"'}) " git files only
-	"call fzf#vim#gitfiles('', {'options': '--info=inline --preview "batcat --color=always {}"'}) " syntax highlighting with batcat
+	if executable('bat')
+		call fzf#vim#gitfiles('', {'options': '--info=inline --preview "bat --color=always {}"'})
+	else
+		call fzf#vim#gitfiles('', {'options': '--info=inline --preview "cat {}"'})
+	fi
 endfunction
 
 function! s:find_fzf_all() abort
-	call fzf#vim#files('', {'options': '--info=inline --preview "cat {}"'}) " include all files
+	if executable('bat')
+		call fzf#vim#files('', {'options': '--info=inline --preview "bat --color=always {}"'})
+	else
+		call fzf#vim#files('', {'options': '--info=inline --preview "cat {}"'})
+	fi
 endfunction
 
 " ripgrep
