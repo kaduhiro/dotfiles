@@ -73,10 +73,13 @@ zplug "junegunn/fzf", \
   rename-to:fzf, \
   use:bin/fzf, \
   hook-build:"fzf --version >/dev/null 2>&1 || (cd $ZPLUG_HOME/repos/junegunn/fzf && ./install --bin && cp bin/fzf $ZPLUG_BIN)"
-zplug "BurntSushi/ripgrep", \
-  from:github, \
-  as:command, \
-  hook-build:"rg --version >/dev/null 2>&1 || (cd $ZPLUG_REPOS/BurntSushi/ripgrep && cargo build --release --features 'pcre2' && cp target/release/rg $ZPLUG_BIN)" # feature 'simd-accel' can not use?
+# ripgrep (install with HomeBrew in macOS)
+if [ $(uname) != 'Darwin' ]; then
+	zplug "BurntSushi/ripgrep", \
+	  from:github, \
+	  as:command, \
+	  hook-build:"rg --version >/dev/null 2>&1 || (cd $ZPLUG_REPOS/BurntSushi/ripgrep && cargo build --release --features 'pcre2' && cp target/release/rg $ZPLUG_BIN)" # feature 'simd-accel' can not use?
+fi
 
 if ! zplug check --verbose; then
 	printf "Install? [y/N]: "
@@ -138,7 +141,7 @@ alias .install='~/.dotapps/etc/install.sh'
 
 # #################### profile ####################
 if [ -f ~/.profile ]; then
-	sed -i -E 's/^\..*cargo\/env.*$/#\0/' ~/.profile # never ending loading?
+	#sed -i -E 's/^\..*cargo\/env.*$/#\0/' ~/.profile # never ending loading?
 	source ~/.profile
 fi
 
