@@ -2,7 +2,9 @@
 [ "$OSNAME" = 'macos' ]
 [ "$OSSHELL" = 'zsh' ]
 
-# zsh-completions
-chmod 0755 $(brew --prefix)/share
-chmod 0755 $(brew --prefix)/share/zsh
-chmod 0755 $(brew --prefix)/share/zsh/site-functions
+sudo chsh $USER -s $(which zsh)
+
+if [ ! -d ~/.zplug ]; then
+	# zplug
+	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+fi
