@@ -1,8 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
-brew "docker"
-brew "docker-compose"
 brew "gh"
 brew "git"
 brew "lima"
