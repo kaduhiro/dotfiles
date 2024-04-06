@@ -2,11 +2,12 @@
 [ "$OSNAME" = 'linux' ]
 [ "$OSDIST" = 'ubuntu' ]
 
+# Tmux Plugin Manager
 if type tmux; then
 	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
+# Powerline
 if type pip3; then
-	# Powerline
 	pip3 install powerline-status
 fi
