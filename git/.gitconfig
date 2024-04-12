@@ -33,8 +33,8 @@
 	sco = sparse-checkout
 	cp = cherry-pick
 	ci = commit
-	cia = commit --amend
-	ciad = !"git commit --amend --date \"$(date)\""
+	cia = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\""
+	ciad = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\" --date \"$(date)\""
 	pushf = push --force-with-lease
 	sm = submodule
 	sms = submodule sync
