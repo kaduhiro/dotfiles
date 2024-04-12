@@ -1,11 +1,61 @@
-# Key Repeat
+# Keyboard ID
+KEYBOARD_ID=$(ioreg -r -n IOHIDUserDevice | grep -E 'VendorID|ProductID' | awk '{ print $4; }' | paste -s -d'-\n' -)-0
+
+# Key repeat rate
 defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write -g InitialKeyRepeat -int 15
 
-# Delay Until Repeat
+# Delay until repeat
 defaults write -g KeyRepeat -int 2
 
 # Adjust keyboard brightness in low light
 NPLIST="/private/var/root/Library/Preferences/com.apple.CoreBrightness.plist"
 sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightABEnabled 0" ${NPLIST}
 sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightIdleDimTime 0" ${NPLIST}
+
+# Disable Spotlight
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 '
+	<dict>
+		<key>enabled</key><false/>
+	</dict>
+'
+
+# Change a shortcut
+#   Option+` : Select the previous input source
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 '
+	<dict>
+		<key>enabled</key><true/>
+		<key>value</key>
+		<dict>
+			<key>parameters</key>
+			<array>
+				<integer>96</integer>
+				<integer>50</integer>
+				<integer>524288</integer>
+			</array>
+			<key>type</key>
+			<string>standard</string>
+		</dict>
+	</dict>
+'
+
+# Modifier Keys
+#   CapsLock : No Action
+#   Global   : Control
+defaults -currentHost delete -g com.apple.keyboard.modifiermapping.$KEYBOARD_ID
+defaults -currentHost write -g com.apple.keyboard.modifiermapping.$KEYBOARD_ID '
+	<array>
+		<dict>
+			<key>HIDKeyboardModifierMappingDst</key><real>30064771072</real>
+			<key>HIDKeyboardModifierMappingSrc</key><real>30064771129</real>
+		</dict>
+		<dict>
+			<key>HIDKeyboardModifierMappingDst</key><real>30064771296</real>
+			<key>HIDKeyboardModifierMappingSrc</key><real>280379760050179</real>
+		</dict>
+		<dict>
+			<key>HIDKeyboardModifierMappingDst</key><real>30064771300</real>
+			<key>HIDKeyboardModifierMappingSrc</key><real>1095216660483</real>
+		</dict>
+	</array>
+'
