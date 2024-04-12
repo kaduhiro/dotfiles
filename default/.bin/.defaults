@@ -1,0 +1,64 @@
+#!/bin/sh
+
+options=(none:, global:,-g host:-currentHost, globalhost:-currentHost,-g)
+ignores=(PDPassChangesActivityIdentifier ViewEvery2Hours usageActivityDate)
+
+_defaults() {
+	trap _done 1 2 3 15
+
+	.warning 'waiting for changing preferences...'
+
+	while :; do
+		for o in ${options[@]}; do
+			k=$(echo "$o" | cut -d: -f1)
+			v=$(echo "$o" | cut -d: -f2)
+			h=$(echo "$v" | cut -d, -f1)
+			g=$(echo "$v" | cut -d, -f2)
+
+			l=defaults.$k.latest
+			p=defaults.$k.previous
+
+			defaults $h read $g > $l
+
+			for i in ${ignores[@]}; do
+				sed -i '' -E "s/^.+$i.+$//g" $l
+			done
+
+			if [ -e $p ]; then
+				if ! diff -u -U 10 $p $l; then
+					_done
+					exit 0
+				fi
+			fi
+
+			mv $l $p
+		done
+
+		sleep 1
+	done
+}
+
+_done() {
+	d=$(date '+%Y%m%d%H%M%S')
+
+	yn=$(.prompt 'backup files' 'y/N')
+
+ 	for o in ${options[@]}; do
+ 		k=$(echo "$o" | cut -d: -f1)
+
+		l=defaults.$k.latest
+		p=defaults.$k.previous
+		b=defaults.$k.$d
+
+		if [ "$yn" = 'y' ]; then
+			[ -e $l ] && mv $l $b || mv $p $b
+			.success "backup to '$b'"
+		fi
+
+		rm -f $l $p
+	done
+
+	exit 1
+}
+
+_defaults
