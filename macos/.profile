@@ -1,3 +1,6 @@
+# make
+alias make=gmake
+
 # HomeBrew
 export PATH=$PATH:/opt/homebrew/bin
 # Python (pip3)
