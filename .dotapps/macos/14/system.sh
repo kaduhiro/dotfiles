@@ -6,6 +6,7 @@ scripts=(
 general
 finder
 dock
+controlcenter
 keyboard
 trackpad
 )
