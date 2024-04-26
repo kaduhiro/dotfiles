@@ -17,6 +17,7 @@ bind generic U      ?git pull %(remote)
 
 # ########## git push ##########
 bind generic P      ?git push -u %(remote) %(repo:head)
+bind generic <Esc>P ?git push --force-with-lease -u %(remote) %(repo:head)
 
 # ########## git commit ##########
 # amend
