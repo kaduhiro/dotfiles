@@ -8,6 +8,6 @@ if type tmux; then
 fi
 
 # Powerline
-if type pip3; then
-	pip3 install powerline-status
+if ! type powerline; then
+	sudo apt install -y powerline
 fi
