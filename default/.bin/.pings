@@ -1,0 +1,68 @@
+#!/bin/sh
+set -eu
+
+_pings() {
+	IP_MAX_LENGTH=16
+	GROUP_WIDTH=$((IP_MAX_LENGTH + 6 + 2))
+	subnet=172.16.0
+	start=1
+	number=1
+	
+	subnet=$(.prompt 'subnet [x.x.x.0]' "$subnet" "$subnet")
+	start=$(.prompt "start [$subnet.x]" "$start" "$start")
+	number=$(.prompt 'how many' "$number" "$number")
+
+	lines=$(cat <<- EOF
+	==================================================
+	* Subnet   :$subnet
+	* Start IP :$subnet.$start
+	* End IP   :$subnet.$((start + number - 1))
+	==================================================
+	EOF
+	)
+
+	offset=$(echo "$lines" | wc -l)
+	listrow=$(($(tput lines) - offset))
+
+	clear
+	echo "$lines"
+
+	eol=$((offset + number + 1))
+
+	for n in $(seq 0 $((number - 1))); do
+		ip=$subnet.$((start + n))
+		row=$((offset + (n % listrow) + 1))
+		group=$((n / listrow))
+		col=$(((group * GROUP_WIDTH) + 1))
+		printf "\e[%d;%dH%-${IP_MAX_LENGTH}s[ %2s ]\e[%d;0H" \
+			$row \
+			$col \
+			$ip \
+			'--'
+	done
+
+	pids=
+	for n in $(seq 0 $((number - 1))); do
+		ip=$subnet.$((start + n))
+		row=$((offset + (n % listrow) + 1))
+		group=$((n / listrow))
+		col=$(((group * GROUP_WIDTH) + IP_MAX_LENGTH + 1))
+		(
+			set +e
+			sleep $(echo "scale=3; $(($(od -An -tu4 -N4 </dev/urandom) % 1000)) / 1000" | bc)
+			ping -c 1 -W 1 $ip >/dev/null 2>&1
+			printf '\e[%d;%dH[ %2s ]\e[%d;0H' \
+				$row \
+				$col \
+				$([ $? -eq 0 ] && printf '\e[1;32mOK\e[m' || printf '\e[1;31mNG\e[m') \
+				$eol
+		) &
+		pids="$pids $!"
+	done
+
+	trap "kill -KILL $pids >/dev/null 2>&1" 1 2 3 15
+	wait $pids
+}
+
+_pings $@
+
