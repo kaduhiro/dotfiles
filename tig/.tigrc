@@ -14,6 +14,7 @@ bind main    <Esc>F :toggle commit-title-refs
 
 # ########## git pull ##########
 bind generic U      ?git pull %(remote)
+bind generic <Esc>U ?git pull origin %(branch)
 
 # ########## git push ##########
 bind generic P      ?git push -u %(remote) %(repo:head)
