@@ -87,3 +87,13 @@
 '    test: adding missing tests, refactoring tests; no production code change' \
 '   chore: updating grunt tasks etc; no production code change' \
 ; do echo \"$m\"; done"
+
+[pager]
+	show = diff-highlight | less
+	diff = diff-highlight | less
+	log = diff-highlight | less
+
+[submodule ""]
+	active = true
+	url =
+
