@@ -25,20 +25,24 @@
 	st = status
 	stt = status -uno
 	br = branch
-	sw = switch
+	sw = "!f(){ if [ $# -gt 0 ]; then git switch $@; else b=$(git branch --sort=-committerdate --format='%(color:blue)%(refname:short)%(color:white)|  %(color:white)%(authorname)|%(color:green)%(committerdate:relative)%(color:white)|%(subject)' --color=always | column -ts'|' | fzf --ansi --exact --preview='git log --oneline --graph --decorate --color=always -50 {+1}' | awk '{print $1}') && [ -n \"$b\" ] && printf \"\\033[1;36m?\\033[m Switch to '$b' \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git switch $b; fi; };f"
 	rb = rebase
 	rbc = rebase --continue
 	co = checkout
 	cot = checkout --theirs .
 	sco = sparse-checkout
 	cp = cherry-pick
+	cp1 = cherry-pick -m 1
 	ci = commit
 	cia = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\""
 	ciad = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\" --date \"$(date)\""
 	pushf = push --force-with-lease
+	rss = reset --soft 'HEAD^'
+	rso = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && printf \"\\033[1;36m?\\033[m Synchronize with origin ignoreing current changes \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git reset --hard origin/$b; };f"
 	sm = submodule
 	sms = submodule sync
 	smu = submodule update --init
+	smd = "!f(){ git submodule deinit -f $1; git rm -f $1; rm -rf .git/modules/$1; };f"
 	ss = stash
 	sss = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && printf \"\\033[1;36m?\\033[m stash message \\033[2;37m($b)\\033[m \" && read m && git stash save -u \"${m:-$b}\"; };f"
 	ssa = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F': ' -v b=$b '$3==b{print $1;}' | head -n 1) && printf \"\\033[1;36m?\\033[m apply $s \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git stash apply --index $s; };f"
