@@ -26,8 +26,12 @@
 	stt = status -uno
 	br = branch
 	sw = "!f(){ if [ $# -gt 0 ]; then git switch $@; else b=$(git branch --sort=-committerdate --format='%(color:blue)%(refname:short)%(color:white)|  %(color:white)%(authorname)|%(color:green)%(committerdate:relative)%(color:white)|%(subject)' --color=always | column -ts'|' | fzf --ansi --exact --preview='git log --oneline --graph --decorate --color=always -50 {+1}' | awk '{print $1}') && [ -n \"$b\" ] && printf \"\\033[1;36m?\\033[m Switch to '$b' \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git switch $b; fi; };f"
+	mg = merge
+	mgc = merge --continue
+	mgx = merge --abort
 	rb = rebase
 	rbc = rebase --continue
+	rbx = rebase --abort
 	co = checkout
 	cot = checkout --theirs .
 	sco = sparse-checkout
@@ -36,49 +40,7 @@
 	ci = commit
 	cia = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\""
 	ciad = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\" --date \"$(date)\""
-	pushf = push --force-with-lease
-	rss = reset --soft 'HEAD^'
-	rso = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && printf \"\\033[1;36m?\\033[m Synchronize with origin ignoreing current changes \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git reset --hard origin/$b; };f"
-	sm = submodule
-	sms = submodule sync
-	smu = submodule update --init
-	smd = "!f(){ git submodule deinit -f $1; git rm -f $1; rm -rf .git/modules/$1; };f"
-	ss = stash
-	sss = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && printf \"\\033[1;36m?\\033[m stash message \\033[2;37m($b)\\033[m \" && read m && git stash save -u \"${m:-$b}\"; };f"
-	ssa = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F': ' -v b=$b '$3==b{print $1;}' | head -n 1) && printf \"\\033[1;36m?\\033[m apply $s \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git stash apply --index $s; };f"
-	ssp = "!f(){ b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F': ' -v b=$b '$3==b{print $1;}' | head -n 1) && printf \"\\033[1;36m?\\033[m pop $s \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git stash pop --index $s; };f"
-	ssw = "!f(){ \
-		hb=$(git rev-parse --abbrev-ref HEAD); \
-		ss=$(git stash list | awk -F': ' '{ print $3; }'); \
-		echo \"$ss\" | awk -v b=$hb '{ if ($0 == b) printf(\"\\033[1;36m%s\\033[m\\n\", $0); else print; }' | nl; \
-		printf \"\\033[1;36m?\\033[m switch stash \\033[2;37m(number)\\033[m \" && read n; \
-		[ -z \"$n\" ] && return; \
-		b=$(echo \"$ss\" | sed -n ${n}p); \
-		[ -z \"$b\" ] && return; \
-		yn=undefined; \
-		if echo \"$ss\" | grep -x $hb > /dev/null; then \
-			printf \"\\033[1;36m?\\033[m untracked files can not be recovered, discard changes \\033[2;37m(if yes, then 'delete')\\033[m \" && read yn; \
-		fi; \
-		if [ \"$yn\" = 'undefined' ]; then \
-			git stash save -u \"$hb\"; \
-		elif [ \"$yn\" = 'delete' ]; then \
-			git stash -u; \
-			printf \"\\033[1;32m✔\\033[m if you want to restore, 'git cherry-pick -n -m1 %s'\n\" \"$(git stash drop | awk '{ gsub(/[^0-9a-z ]/, \"\"); print $3; }')\"; \
-		else \
-			git stash drop $(git stash list | awk -F': ' -v b=$hb '$3 == b { print $1; }' | head -n 1) && git stash save -u \"$hb\"; \
-		fi; \
-		git switch $b; \
-		git stash apply --index $(git stash list | awk -F': ' -v b=$b '$3 == b { print $1; }' | head -n 1); \
-	}; f" 
-	ssmv = "!f(){ [ -n \"$1\" ] && git stash store -m \"${2:-renamed}\" $(git stash drop ${1:-0} | sed 's/^.*(\\(.*\\))$/\\1/'); };f"
-	kill = "!f(){ printf \"\\033[1;33m!\\033[m delete all changes. untracked files can not be recovered on 'git revive'\\n\\033[1;36m?\\033[m ARE YOU SURE? \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git stash -u && printf \"\\033[1;32m✔\\033[m if you want to restore, 'git cherry-pick -n -m1 %s'\n\" \"$(git stash drop | awk '{ gsub(/[^0-9a-z ]/, \"\"); print $3; }')\"; };f"
-	revive = "!f(){ printf \"\\033[1;36m?\\033[m dropped stash hash \\033[2;37m(Dropped refs/stash@{0} (!!!HERE!!!))\\033[m \" && read h && [ -n \"$h\" ] && git cherry-pick -n -m1 $h; };f"
-	diffc = diff --cached
-	difff = diff --word-diff
-	ll = log --stat --decorate=short --pretty=format:'%C(yellow)%h %Cgreen%cr %Cblue%cn%Cred%d %Creset%s %C(cyan)%b'
-	lg = log --graph --date=short --decorate=short --pretty=format:'%C(yellow)%h %Cgreen%cd %Cblue%cn%Cred%d %Creset%s'
-	lm = log --merges --pretty=format:'%C(yellow)%h %Cgreen%ci %Cblue%cn%Cred%d %Creset%s %C(cyan)%b'
-	msg = !"for m in \
+	cimsg = !"for m in \
 '    feat: new feature for the user, not a new feature for build script' \
 '     fix: bug fix for the user, not a fix to a build script' \
 '    docs: changes to the documentation' \
@@ -87,6 +49,52 @@
 '    test: adding missing tests, refactoring tests; no production code change' \
 '   chore: updating grunt tasks etc; no production code change' \
 ; do echo \"$m\"; done"
+	pushf = push --force-with-lease
+	rss = reset --soft 'HEAD^'
+	rso = !"git yn 'Synchronize with origin ignoring current changes?' && git reset --hard origin/$(git rev-parse --abbrev-ref HEAD);"
+	rsh = !"printf \"\\033[1;31m@\\033[m Reset HEAD committed as [\\033[1;34m$(git log -1 --pretty=%B)\\033[m].\\n\" && git yn-sure && git reset --hard 'HEAD^' && git rl1"
+	sm = submodule
+	sms = submodule sync
+	smu = submodule update --init
+	smd = !"git submodule deinit -f $1; git rm -f $1; rm -rf .git/modules/$1"
+	ss = stash
+	sss = !"b=$(git rev-parse --abbrev-ref HEAD) && printf \"\\033[1;36m?\\033[m Stash message \\033[2;37m($b)\\033[m \" && read m && git stash save -u \"${m:-$b}\""
+	ssa = !"b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F': ' -v b=$b '$3==b{print $1;}' | head -n 1) && git yn \"Apply stash '$s'?\" && git stash apply --index $s"
+	ssp = !"b=$(git rev-parse --abbrev-ref HEAD) && s=$(git stash list | awk -F': ' -v b=$b '$3==b{print $1;}' | head -n 1) && git yn \"Pop '$s'?\" && git stash pop --index $s"
+	ssw = "!f(){ \
+		hb=$(git rev-parse --abbrev-ref HEAD); \
+		ss=$(git stash list | awk -F': ' '{ print $3; }'); \
+		echo \"$ss\" | awk -v b=$hb '{ if ($0 == b) printf(\"\\033[1;36m%s\\033[m\\n\", $0); else print; }' | nl; \
+		printf \"\\033[1;36m?\\033[m Switch stash \\033[2;37m(number)\\033[m \" && read n; \
+		[ -z \"$n\" ] && return; \
+		b=$(echo \"$ss\" | sed -n ${n}p); \
+		[ -z \"$b\" ] && return; \
+		yn=undefined; \
+		if echo \"$ss\" | grep -x $hb > /dev/null; then \
+			printf \"\\033[1;36m?\\033[m Untracked files can not be recovered, discard changes \\033[2;37m(if yes, then 'delete')\\033[m \" && read yn; \
+		fi; \
+		if [ \"$yn\" = 'undefined' ]; then \
+			git stash save -u \"$hb\"; \
+		elif [ \"$yn\" = 'delete' ]; then \
+			git stash -u; \
+			printf \"\\033[1;32m✔\\033[m Tracked files can be restore with 'git cherry-pick -n -m1 %s'\n.\" \"$(git stash drop | awk '{ gsub(/[^0-9a-z ]/, \"\"); print $3; }')\"; \
+		else \
+			git stash drop $(git stash list | awk -F': ' -v b=$hb '$3 == b { print $1; }' | head -n 1) && git stash save -u \"$hb\"; \
+		fi; \
+		git switch $b; \
+		git stash apply --index $(git stash list | awk -F': ' -v b=$b '$3 == b { print $1; }' | head -n 1); \
+	}; f" 
+	ssmv = !"[ -n \"$1\" ] && git stash store -m \"${2:-renamed}\" $(git stash drop ${1:-0} | sed 's/^.*(\\(.*\\))$/\\1/')"
+	kill = !"git yn-sure && git stash -u && printf \"\\033[1;32m✔\\033[m Tracked files can be restore with 'git cherry-pick -n -m1 %s' and untracked files are 'git fsck --lost-found'.\n\" \"$(git stash drop | awk '{ gsub(/[^0-9a-z ]/, \"\"); print $3; }')\""
+	revive = !"printf \"\\033[1;36m?\\033[m Dropped stash hash \\033[2;37m(Dropped refs/stash@{0} (!!!HERE!!!))\\033[m \" && read h && [ -n \"$h\" ] && git cherry-pick -n -m1 $h"
+	diffc = diff --cached
+	difff = diff --word-diff
+	ll = log --stat --decorate=short --pretty=format:'%C(yellow)%h %Cgreen%cr %Cblue%cn%Cred%d %Creset%s %C(cyan)%b'
+	lg = log --graph --date=short --decorate=short --pretty=format:'%C(yellow)%h %Cgreen%cd %Cblue%cn%Cred%d %Creset%s'
+	lm = log --merges --pretty=format:'%C(yellow)%h %Cgreen%ci %Cblue%cn%Cred%d %Creset%s %C(cyan)%b'
+	rl1 = !"printf \"\\033[1;32m✔\\033[m Tracked files can be restore with 'git reset --hard %s'.\n\" \"$(git reflog | awk '$2 == \"HEAD@{1}:\" { print $1; }')\""
+	yn = !"printf \"\\033[1;36m?\\033[m $1 \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && true || false"
+	yn-sure = !"printf \"\\033[1;33m!\\033[m Untracked files can not be recovered on 'git revive'.\\n\" && git status -sb && git yn 'Are you sure?'"
 
 [pager]
 	show = diff-highlight | less
