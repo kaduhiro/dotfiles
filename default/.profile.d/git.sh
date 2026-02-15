@@ -8,3 +8,6 @@ dotgit() {
 alias .git=dotgit
 alias .gitconfig='vi ~/.gitconfig'
 alias .gitignore='vi ~/.config/git/ignore'
+
+# for macOS
+PATH=$PATH:/opt/homebrew/share/git-core/contrib/diff-highlight
