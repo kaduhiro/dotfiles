@@ -28,6 +28,6 @@ function _tmux_ssh_agent() {
 _tmux_ssh_agent
 
 # run when shell starts
-if [ -z $VSCODE_TASKS ] && [ -z $TMUX ] && type tmux > /dev/null; then
+if type tmux >/dev/null && [ -z $TMUX ] && ! env | grep -q VSCODE_; then
 	tmux a > /dev/null 2>&1 || .warning 'no session on tmux'
 fi
