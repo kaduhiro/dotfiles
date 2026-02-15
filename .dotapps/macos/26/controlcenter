@@ -1,0 +1,6 @@
+# Display the time with seconds
+defaults write com.apple.menuextra.clock ShowSeconds -bool true
+
+# Battery Show Percentage
+defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true
+

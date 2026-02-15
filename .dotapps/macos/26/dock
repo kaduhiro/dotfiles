@@ -1,0 +1,23 @@
+# Automatically hide and show the Dock
+defaults write com.apple.dock autohide -bool true
+
+# Size
+defaults write com.apple.dock tilesize -int 40
+defaults write com.apple.dock largesize -int 80
+
+# Animate opening applications
+defaults write com.apple.dock launchanim -bool false
+defaults write com.apple.dock mineffect -string "scale"
+defaults write com.apple.dock magnification -bool true
+
+# Show indicators for open applications
+defaults write com.apple.dock show-process-indicators -bool true
+
+# Do not show recent applications
+defaults write com.apple.dock show-recents -bool false
+
+# Reset applications
+printf '? delete all applications (y/N) ' && read yn
+if [ "$yn" = 'y' ]; then
+  defaults delete com.apple.dock persistent-apps
+fi

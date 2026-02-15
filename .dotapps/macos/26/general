@@ -1,0 +1,2 @@
+# Apprerance
+defaults write -g AppleInterfaceStyle -string "Dark"

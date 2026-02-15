@@ -1,0 +1,14 @@
+# Show these items on the desktop
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
+
+# Show all filename extensions
+defaults write -g AppleShowAllExtensions -bool true
+
+# Show Hidden Files
+defaults write com.apple.finder AppleShowAllFiles true
+
+# Do not create .DS_Store on network volume
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
