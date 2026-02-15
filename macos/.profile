@@ -1,5 +1,7 @@
 # make
-alias make=gmake
+alias make='gmake -s'
+alias sed=gsed
+alias ❯=
 
 # HomeBrew
 export PATH=$PATH:/opt/homebrew/bin
