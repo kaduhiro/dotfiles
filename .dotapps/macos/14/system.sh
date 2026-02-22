@@ -1,6 +1,6 @@
 #!/bin/sh
 [ "$OSNAME" = 'macos' ]
-[[ "$OSVERSION" =~ ^14\. ]]
+[ "$OSVERSION" = '14' ]
 
 scripts=(
 general

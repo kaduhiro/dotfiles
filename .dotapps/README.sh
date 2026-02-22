@@ -1,7 +1,7 @@
 #!/bin/sh
 [ "$OSNAME" = '' ]
 [ "$OSDIST" = '' ]
-[[ "$OSVERSION" =~ ^1\. ]]
+[ "$OSVERSION" = '' ]
 [ "$OSARCH" = '' ]
 [ "$OSSHELL" = '' ]
 
