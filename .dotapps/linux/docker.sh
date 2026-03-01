@@ -45,3 +45,9 @@ if ! type docker; then
 	# 	chmod +x ~/.docker/cli-plugins/docker-compose
 	# fi
 fi
+
+if docker info >/dev/null; then
+	if ! docker network inspect internal >/dev/null; then
+		docker network create internal
+	fi
+fi
