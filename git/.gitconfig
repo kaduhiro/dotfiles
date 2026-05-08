@@ -21,7 +21,8 @@
 	rebase = false
 
 [alias]
-	ssh = "!f(){ ssh -T git@github.com; };f"
+	ssh = !"ssh -T git@github.com"
+	sshx = !"export SSH_AGENT_PID=$(pgrep -x ssh-agent) && ssh-agent -k"
 	st = status
 	stt = status -uno
 	br = branch
