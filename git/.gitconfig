@@ -25,7 +25,7 @@
 	st = status
 	stt = status -uno
 	br = branch
-	sw = "!f(){ if [ $# -gt 0 ]; then git switch $@; else b=$(git branch --sort=-committerdate --format='%(color:blue)%(refname:short)%(color:white)|  %(color:white)%(authorname)|%(color:green)%(committerdate:relative)%(color:white)|%(subject)' --color=always | column -ts'|' | fzf --ansi --exact --preview='git log --oneline --graph --decorate --color=always -50 {+1}' | awk '{print $1}') && [ -n \"$b\" ] && printf \"\\033[1;36m?\\033[m Switch to '$b' \\033[2;37m(y/N)\\033[m \" && read yn && [ \"$yn\" = 'y' ] && git switch $b; fi; };f"
+	sw = "!f(){ if [ $# -gt 0 ]; then git switch $@; else b=$(git branch --sort=-committerdate --format='%(color:blue)%(refname:short)%(color:white)|  %(color:white)%(authorname)|%(color:green)%(committerdate:relative)%(color:white)|%(subject)' --color=always | column -ts'|' | fzf --ansi --exact --preview='git log --oneline --graph --decorate --color=always -50 {+1}' | awk '{print $1}') && [ -n \"$b\" ] && git switch $b; fi; };f"
 	mg = merge
 	mgc = merge --continue
 	mgx = merge --abort
@@ -37,6 +37,7 @@
 	sco = sparse-checkout
 	cp = cherry-pick
 	cp1 = cherry-pick -m 1
+	cpx = cherry-pick --abort
 	ci = commit
 	cia = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\""
 	ciad = !"git commit --amend --author=\"$(git config user.name) <$(git config user.email)>\" --date \"$(date)\""
