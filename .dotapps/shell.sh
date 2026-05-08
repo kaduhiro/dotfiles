@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! type zsh; then
+if ! type zsh >/dev/null; then
 	case "$OSDIST" in
 		ubuntu)
 			sudo apt install -y zsh

@@ -2,7 +2,9 @@
 [ "$OSNAME" = 'macos' ]
 [ "$OSSHELL" = 'zsh' ]
 
-sudo chsh $USER -s $(which zsh)
+if [ "$SHELL" != '/bin/zsh' ]; then
+	sudo chsh $USER -s $(which zsh)
+fi
 
 if [ ! -d ~/.zplug ]; then
 	# zplug

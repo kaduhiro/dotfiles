@@ -2,7 +2,7 @@
 [ "$OSNAME" = 'macos' ]
 
 # install Homebrew
-if ! command brew; then
+if ! type brew >/dev/null; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	export PATH=$PATH:/opt/homebrew/bin
 fi
