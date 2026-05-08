@@ -15,6 +15,7 @@ brew "gh"
 brew "tig"
 
 cask "xbar"
+cask "macsyzones"
 cask "linearmouse"
 
 cask "switchhosts"
