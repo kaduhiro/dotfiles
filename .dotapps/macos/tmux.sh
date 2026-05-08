@@ -1,6 +1,8 @@
 #!/bin/sh
 [ "$OSNAME" = 'macos' ]
 
+type tmux >/dev/null && type pip3 >/dev/null && pip3 show powerline-status >/dev/null && exit 1
+
 # Tmux Plugin Manager
 if type tmux >/dev/null; then
 	if [ ! -d ~/.tmux/plugins/tpm ]; then
