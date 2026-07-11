@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+
+# Environment files
+.env**
+!.env**.template
+!.env.development
+!.env.production
+
+# Makefile
+Makefile
+Makefile.d
+!Makefile.d/
+
+# Development
+.history
+.vscode
+.codex
+.copilot
