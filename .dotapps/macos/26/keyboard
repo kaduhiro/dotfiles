@@ -13,13 +13,6 @@ NPLIST="/private/var/root/Library/Preferences/com.apple.CoreBrightness.plist"
 sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightABEnabled 0" ${NPLIST}
 sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightIdleDimTime 0" ${NPLIST}
 
-# Disable Spotlight
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 '
-	<dict>
-		<key>enabled</key><false/>
-	</dict>
-'
-
 # Change a shortcut
 #   Option+` : Select the previous input source
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 '
@@ -40,22 +33,12 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 '
 '
 
 # Modifier Keys
-#   CapsLock : No Action
-#   Global   : Control
-defaults -currentHost delete -g com.apple.keyboard.modifiermapping.$KEYBOARD_ID
-defaults -currentHost write -g com.apple.keyboard.modifiermapping.$KEYBOARD_ID '
-	<array>
-		<dict>
-			<key>HIDKeyboardModifierMappingDst</key><real>30064771072</real>
-			<key>HIDKeyboardModifierMappingSrc</key><real>30064771129</real>
-		</dict>
-		<dict>
-			<key>HIDKeyboardModifierMappingDst</key><real>30064771296</real>
-			<key>HIDKeyboardModifierMappingSrc</key><real>280379760050179</real>
-		</dict>
-		<dict>
-			<key>HIDKeyboardModifierMappingDst</key><real>30064771300</real>
-			<key>HIDKeyboardModifierMappingSrc</key><real>1095216660483</real>
-		</dict>
-	</array>
-'
+cat <<- EOF
+⚠️  Modify Keys by yourself ⚠️
+==================================================
+[System Settings] > [Keyboard] > [Keyboard Shortcuts] > [Modifier Keys]
+
+- CapsLock key => No Action
+- Globe key    => Control
+==================================================
+EOF
