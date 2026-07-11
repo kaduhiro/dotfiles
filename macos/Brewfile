@@ -26,6 +26,3 @@ cask "slack"
 cask "anki"
 cask "figma"
 cask "visual-studio-code"
-mas "Amphetamine", id: 937984704
-mas "LINE", id: 539883307
-mas "Tailscale", id: 1475387142
