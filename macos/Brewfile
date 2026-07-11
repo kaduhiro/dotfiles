@@ -13,6 +13,7 @@ brew "docker-compose"
 brew "git"
 brew "gh"
 brew "tig"
+brew "herdr"
 
 cask "xbar"
 cask "macsyzones"
