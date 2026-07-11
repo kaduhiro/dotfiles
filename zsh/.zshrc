@@ -105,15 +105,14 @@ bindkey '^R' history-incremental-pattern-search-backward
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # #################### alias ####################
-alias la='ls -a'
-alias ll='ls -l'
+alias l='ls -alh'
 case $OSTYPE in
-	# macos
+	# macOS
 	darwin*)
 		export CLICOLOR=1
 		alias ls='ls -G -F'
 		;;
-	# linux
+	# Linux
 	linux*)
 		alias ls='ls -F --color=auto'
 		;;
